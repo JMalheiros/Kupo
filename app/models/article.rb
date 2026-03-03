@@ -21,6 +21,7 @@ class Article < ApplicationRecord
 
   def schedule!(time)
     update!(status: "scheduled", published_at: time)
+    PublishArticleJob.set(wait_until: time).perform_later(self)
   end
 
   private
