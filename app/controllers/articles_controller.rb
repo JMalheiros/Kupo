@@ -4,10 +4,18 @@ class ArticlesController < ApplicationController
   before_action :set_article, only: [ :show, :edit, :update, :destroy, :publish ]
 
   def index
-    @articles = Article.published.recent
-    @articles = @articles.joins(:categories).where(categories: { slug: params[:category] }) if params[:category].present?
     @categories = Category.all
-    render Views::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category])
+
+    if authenticated?
+      @articles = Article.recent
+      @articles = @articles.joins(:categories).where(categories: { slug: params[:category] }) if params[:category].present?
+      @articles = @articles.where(status: params[:status]) if params[:status].present?
+      render Views::Admin::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category])
+    else
+      @articles = Article.published.recent
+      @articles = @articles.joins(:categories).where(categories: { slug: params[:category] }) if params[:category].present?
+      render Views::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category])
+    end
   end
 
   def show
