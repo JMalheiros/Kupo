@@ -5,15 +5,11 @@ class ArticlesController < ApplicationController
 
   def index
     @categories = Category.all
+    @articles = ArticlesQuery.new(params: params, authenticated: authenticated?).call
 
     if authenticated?
-      @articles = Article.recent
-      @articles = @articles.joins(:categories).where(categories: { slug: params[:category] }) if params[:category].present?
-      @articles = @articles.where(status: params[:status]) if params[:status].present?
       render Views::Admin::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category])
     else
-      @articles = Article.published.recent
-      @articles = @articles.joins(:categories).where(categories: { slug: params[:category] }) if params[:category].present?
       render Views::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category])
     end
   end
