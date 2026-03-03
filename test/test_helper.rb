@@ -14,6 +14,12 @@ require "rails/test_help"
 require "shoulda/context"
 require "shoulda/matchers"
 
+module SignInHelper
+  def sign_in(user)
+    post session_url, params: { email_address: user.email_address, password: "password123" }
+  end
+end
+
 module ActiveSupport
   class TestCase
     parallelize(workers: :number_of_processors)
@@ -30,6 +36,10 @@ module ActiveSupport
     # Use factories instead of fixtures
     include FactoryBot::Syntax::Methods
   end
+end
+
+class ActionDispatch::IntegrationTest
+  include SignInHelper
 end
 
 Shoulda::Matchers.configure do |config|
