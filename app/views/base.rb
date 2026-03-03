@@ -9,4 +9,10 @@ class Views::Base < Components::Base
 
   # More caching options at https://www.phlex.fun/components/caching
   def cache_store = Rails.cache
+
+  private
+
+  def turbo_frame_tag(id, **attrs, &block)
+    tag(:"turbo-frame", id: id, **attrs, &block)
+  end
 end
