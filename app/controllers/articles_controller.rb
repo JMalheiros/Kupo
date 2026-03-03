@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
   allow_unauthenticated_access only: [ :index, :show ]
 
-  before_action :set_article, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_article, only: [ :show, :edit, :update, :destroy, :publish ]
 
   def index
     @articles = Article.published.recent
@@ -48,6 +48,22 @@ class ArticlesController < ApplicationController
   def destroy
     @article.destroy!
     redirect_to root_url
+  end
+
+  def publish
+    case params[:publish_action]
+    when "now"
+      @article.publish_now!
+    when "schedule"
+      @article.schedule!(Time.zone.parse(params[:published_at]))
+    end
+
+    redirect_to article_url(slug: @article.slug)
+  end
+
+  def preview
+    html = MarkdownRenderer.render(params[:body])
+    render html: html.html_safe, layout: false
   end
 
   private
