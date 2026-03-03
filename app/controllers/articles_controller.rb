@@ -11,7 +11,8 @@ class ArticlesController < ApplicationController
   end
 
   def show
-    render Views::Articles::Show.new(article: @article)
+    modal = turbo_frame_request_id == "modal"
+    render Views::Articles::Show.new(article: @article, modal: modal)
   end
 
   def new
