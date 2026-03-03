@@ -12,6 +12,6 @@ class CreateArticles < ActiveRecord::Migration[8.1]
 
     add_index :articles, :slug, unique: true
     add_index :articles, :status
-    add_index :articles, [:status, :published_at]
+    add_index :articles, [ :status, :published_at ]
   end
 end

@@ -16,7 +16,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
 
     should "filter articles by category" do
       category = create(:category, name: "Ruby")
-      in_category = create(:article, :published, categories: [category])
+      in_category = create(:article, :published, categories: [ category ])
       other = create(:article, :published)
 
       get root_url, params: { category: category.slug }

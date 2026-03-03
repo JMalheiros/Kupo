@@ -39,20 +39,20 @@ class ArticleTest < ActiveSupport::TestCase
     end
 
     should "return only published articles" do
-      assert_equal [@published], Article.published.to_a
+      assert_equal [ @published ], Article.published.to_a
     end
 
     should "return only draft articles" do
-      assert_equal [@draft], Article.drafts.to_a
+      assert_equal [ @draft ], Article.drafts.to_a
     end
 
     should "return only scheduled articles" do
-      assert_equal [@scheduled], Article.scheduled.to_a
+      assert_equal [ @scheduled ], Article.scheduled.to_a
     end
 
     should "order published articles by published_at desc" do
       older = create(:article, :published, published_at: 2.hours.ago)
-      assert_equal [@published, older], Article.published.recent.to_a
+      assert_equal [ @published, older ], Article.published.recent.to_a
     end
   end
 
