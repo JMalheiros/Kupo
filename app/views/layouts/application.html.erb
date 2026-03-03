@@ -1,32 +1,44 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "M Station" %></title>
+    <title><%= content_for(:title) || "MStation" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="M Station">
+    <meta name="application-name" content="MStation">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-animate-css@1/dist/tw-animate.css">
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="min-h-screen bg-background text-foreground">
+    <header class="border-b border-border">
+      <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="/" class="text-xl font-bold text-foreground hover:text-primary transition-colors">
+          MStation
+        </a>
+
+        <nav class="flex items-center gap-4">
+          <% if authenticated? %>
+            <%= button_to "Sign out", session_path(Current.session), method: :delete, class: "text-sm text-muted-foreground hover:text-foreground cursor-pointer" %>
+          <% else %>
+            <a href="<%= new_session_path %>" class="text-sm text-muted-foreground hover:text-foreground">Sign in</a>
+          <% end %>
+        </nav>
+      </div>
+    </header>
+
+    <main>
       <%= yield %>
     </main>
   </body>
