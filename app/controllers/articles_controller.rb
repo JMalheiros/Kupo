@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
   allow_unauthenticated_access only: [ :index, :show ]
 
-  before_action :set_article, only: [ :show ]
+  before_action :set_article, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @articles = Article.published.recent
@@ -14,6 +14,42 @@ class ArticlesController < ApplicationController
     render Views::Articles::Show.new(article: @article)
   end
 
+  def new
+    @article = Article.new
+    @categories = Category.all
+    render Views::Admin::Articles::Form.new(article: @article, categories: @categories)
+  end
+
+  def create
+    @article = Article.new(article_params)
+
+    if @article.save
+      redirect_to article_url(slug: @article.slug)
+    else
+      @categories = Category.all
+      render Views::Admin::Articles::Form.new(article: @article, categories: @categories), status: :unprocessable_entity
+    end
+  end
+
+  def edit
+    @categories = Category.all
+    render Views::Admin::Articles::Form.new(article: @article, categories: @categories)
+  end
+
+  def update
+    if @article.update(article_params)
+      redirect_to article_url(slug: @article.slug)
+    else
+      @categories = Category.all
+      render Views::Admin::Articles::Form.new(article: @article, categories: @categories), status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @article.destroy!
+    redirect_to root_url
+  end
+
   private
 
   def set_article
@@ -22,5 +58,9 @@ class ArticlesController < ApplicationController
     else
       Article.published.find_by!(slug: params[:slug])
     end
+  end
+
+  def article_params
+    params.require(:article).permit(:title, :body, :slug, category_ids: [])
   end
 end
