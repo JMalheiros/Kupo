@@ -8,34 +8,33 @@ class ArticlesTest < ApplicationSystemTestCase
     @draft = create(:article, :draft, title: "Draft Article")
   end
 
-  test "visitor sees published articles" do
+  test "unauthenticated user is redirected to login" do
     visit root_url
-    assert_text "Published Article"
-    assert_no_text "Draft Article"
+    assert_current_path new_session_path
   end
 
-  test "visitor can filter by category" do
+  test "authenticated user sees all articles with admin controls" do
+    sign_in_as(@user)
+    assert_text "Published Article"
+    assert_text "Draft Article"
+    assert_text "New Article"
+    assert_text "Manage Categories"
+  end
+
+  test "authenticated user can filter by category" do
     create(:article, :published, title: "Untagged Article")
-    visit root_url
+    sign_in_as(@user)
     click_on "Ruby"
     assert_text "Published Article"
     assert_no_text "Untagged Article"
   end
 
-  test "visitor can view article in modal" do
-    visit root_url
-    click_on "Published Article"
-    assert_selector "[data-controller='modal']"
-    assert_text "Published Article"
-  end
-
-  test "admin sees all articles and admin controls after sign in" do
+  test "authenticated user can preview an article" do
     sign_in_as(@user)
-    assert_text "Sign out"
-    assert_text "Published Article"
-    assert_text "Draft Article"
-    assert_text "New Article"
-    assert_text "Manage Categories"
+    assert_text "Articles" # Wait for index to load after sign in
+    visit preview_article_path(slug: @published.slug)
+    assert_text @published.title
+    assert_text "Export Markdown"
   end
 
   private
