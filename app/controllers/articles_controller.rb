@@ -5,7 +5,7 @@ class ArticlesController < ApplicationController
     @categories = Category.all
     @articles = ArticlesQuery.new(params: params).call
 
-    render Views::Admin::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category])
+    render Views::Admin::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category], current_status: params[:status])
   end
 
   def show
