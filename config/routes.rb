@@ -2,12 +2,14 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  resources :articles, param: :slug, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
+  resources :articles, param: :slug, only: [ :index, :new, :create, :edit, :update, :destroy ] do
     member do
       post :publish
+      get :preview
+      get :export
     end
     collection do
-      post :preview
+      post :markdown_preview
     end
   end
 

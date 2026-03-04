@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: [ :show, :edit, :update, :destroy, :publish ]
+  before_action :set_article, only: [ :edit, :update, :destroy, :publish, :preview, :export ]
 
   def index
     @categories = Category.all
@@ -8,8 +8,8 @@ class ArticlesController < ApplicationController
     render Views::Admin::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category], current_status: params[:status])
   end
 
-  def show
-    render Views::Articles::Show.new(article: @article)
+  def preview
+    render Views::Articles::Preview.new(article: @article)
   end
 
   def new
@@ -22,7 +22,7 @@ class ArticlesController < ApplicationController
     @article = Article.new(article_params)
 
     if @article.save
-      redirect_to article_url(slug: @article.slug)
+      redirect_to preview_article_url(slug: @article.slug)
     else
       @categories = Category.all
       render Views::Admin::Articles::Form.new(article: @article, categories: @categories), status: :unprocessable_entity
@@ -36,7 +36,7 @@ class ArticlesController < ApplicationController
 
   def update
     if @article.update(article_params)
-      redirect_to article_url(slug: @article.slug)
+      redirect_to preview_article_url(slug: @article.slug)
     else
       @categories = Category.all
       render Views::Admin::Articles::Form.new(article: @article, categories: @categories), status: :unprocessable_entity
@@ -56,10 +56,18 @@ class ArticlesController < ApplicationController
       @article.schedule!(Time.zone.parse(params[:published_at]))
     end
 
-    redirect_to article_url(slug: @article.slug)
+    redirect_to preview_article_url(slug: @article.slug)
   end
 
-  def preview
+  def export
+    markdown = "# #{@article.title}\n\n#{@article.body}"
+    send_data markdown,
+      filename: "#{@article.slug}.md",
+      type: "text/markdown",
+      disposition: "attachment"
+  end
+
+  def markdown_preview
     html = MarkdownRenderer.render(params[:body])
     render html: html.html_safe, layout: false
   end

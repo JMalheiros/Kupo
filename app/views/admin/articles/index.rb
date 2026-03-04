@@ -75,9 +75,8 @@ class Views::Admin::Articles::Index < Views::Base
   def admin_article_card(article)
     div(class: "flex items-center justify-between p-4 rounded-lg border border-border") do
       a(
-        href: helpers.article_path(slug: article.slug),
-        class: "flex-1",
-        data: { turbo_frame: "modal", turbo_action: "advance" }
+        href: helpers.preview_article_path(slug: article.slug),
+        class: "flex-1"
       ) do
         div(class: "flex items-center gap-3") do
           render Components::Admin::StatusBadge.new(status: article.status)

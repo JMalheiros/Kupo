@@ -22,7 +22,7 @@ export default class extends Controller {
     }
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
-    const response = await fetch("/articles/preview", {
+    const response = await fetch("/articles/markdown_preview", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
