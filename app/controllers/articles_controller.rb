@@ -1,15 +1,11 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: [ :edit, :update, :destroy, :publish, :preview, :export ]
+  before_action :set_article, only: [ :edit, :update, :destroy ]
 
   def index
     @categories = Category.all
     @articles = ArticlesQuery.new(params: params).call
 
     render Views::Admin::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category], current_status: params[:status])
-  end
-
-  def preview
-    render Views::Articles::Preview.new(article: @article)
   end
 
   def new
@@ -46,30 +42,6 @@ class ArticlesController < ApplicationController
   def destroy
     @article.destroy!
     redirect_to root_url
-  end
-
-  def publish
-    case params[:publish_action]
-    when "now"
-      @article.publish_now!
-    when "schedule"
-      @article.schedule!(Time.zone.parse(params[:published_at]))
-    end
-
-    redirect_to preview_article_url(slug: @article.slug)
-  end
-
-  def export
-    markdown = "# #{@article.title}\n\n#{@article.body}"
-    send_data markdown,
-      filename: "#{@article.slug}.md",
-      type: "text/markdown",
-      disposition: "attachment"
-  end
-
-  def markdown_preview
-    html = MarkdownRenderer.render(params[:body])
-    render html: html.html_safe, layout: false
   end
 
   private

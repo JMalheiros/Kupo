@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Articles::Preview < Views::Base
+class Views::Articles::Preview::Show < Views::Base
   def initialize(article:)
     @article = article
   end

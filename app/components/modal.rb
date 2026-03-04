@@ -19,7 +19,8 @@ class Components::Modal < Components::Base
       )
 
       # Modal content
-      div(class: "relative z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-background rounded-lg shadow-xl mx-4 p-6") do
+      div(class: "relative z-10 w-full max-w-[80vw] max-h-[90vh] overflow-y-auto bg-background
+                  rounded-lg shadow-xl mx-4 p-6") do
         if @closable
           button(
             class: "absolute top-4 right-4 text-muted-foreground hover:text-foreground cursor-pointer",

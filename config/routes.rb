@@ -4,12 +4,12 @@ Rails.application.routes.draw do
 
   resources :articles, param: :slug, only: [ :index, :new, :create, :edit, :update, :destroy ] do
     member do
-      post :publish
-      get :preview
-      get :export
+      post :publish, to: "articles/publishes#create"
+      get :preview, to: "articles/previews#show"
+      get :export, to: "articles/exports#create"
     end
     collection do
-      post :markdown_preview
+      post :markdown_preview, to: "articles/markdown_previews#show"
     end
   end
 

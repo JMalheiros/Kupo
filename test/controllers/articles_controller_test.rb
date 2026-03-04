@@ -7,12 +7,6 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
       assert_response :redirect
     end
 
-    should "redirect preview to sign in" do
-      article = create(:article, :draft)
-      get preview_article_url(slug: article.slug)
-      assert_response :redirect
-    end
-
     should "redirect new to sign in" do
       get new_article_url
       assert_response :redirect
@@ -38,12 +32,6 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
     should "redirect destroy to sign in" do
       article = create(:article, :draft)
       delete article_url(slug: article.slug)
-      assert_response :redirect
-    end
-
-    should "redirect export to sign in" do
-      article = create(:article, :draft)
-      get export_article_url(slug: article.slug)
       assert_response :redirect
     end
   end
@@ -75,20 +63,6 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_includes response.body, in_category.title
       assert_not_includes response.body, other.title
-    end
-  end
-
-  context "GET #preview (authenticated)" do
-    setup do
-      @user = create(:user)
-      sign_in(@user)
-      @article = create(:article, :draft)
-    end
-
-    should "render the article preview" do
-      get preview_article_url(slug: @article.slug)
-      assert_response :success
-      assert_includes response.body, @article.title
     end
   end
 
@@ -155,83 +129,6 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
         delete article_url(slug: @article.slug)
       end
       assert_redirected_to root_url
-    end
-  end
-
-  context "POST #publish (authenticated)" do
-    setup do
-      @user = create(:user)
-      sign_in(@user)
-    end
-
-    should "publish an article immediately" do
-      article = create(:article, :draft)
-      post publish_article_url(slug: article.slug), params: { publish_action: "now" }
-
-      article.reload
-      assert_equal "published", article.status
-      assert_not_nil article.published_at
-      assert_redirected_to preview_article_url(slug: article.slug)
-    end
-
-    should "schedule an article for future publication" do
-      article = create(:article, :draft)
-      future_time = 2.days.from_now.iso8601
-      post publish_article_url(slug: article.slug), params: { publish_action: "schedule", published_at: future_time }
-
-      article.reload
-      assert_equal "scheduled", article.status
-      assert_redirected_to preview_article_url(slug: article.slug)
-    end
-  end
-
-  context "POST #publish (unauthenticated)" do
-    should "require authentication" do
-      article = create(:article, :draft)
-      post publish_article_url(slug: article.slug), params: { publish_action: "now" }
-      assert_response :redirect
-    end
-  end
-
-  context "GET #export (authenticated)" do
-    setup do
-      @user = create(:user)
-      sign_in(@user)
-    end
-
-    should "download the article as markdown" do
-      article = create(:article, :published, title: "My Article", body: "## Hello\n\nSome content here.")
-
-      get export_article_url(slug: article.slug)
-
-      assert_response :success
-      assert_equal "text/markdown", response.content_type
-      assert_match "attachment", response.headers["Content-Disposition"]
-      assert_includes response.headers["Content-Disposition"], "#{article.slug}.md"
-      assert_includes response.body, "# My Article"
-      assert_includes response.body, "## Hello"
-      assert_includes response.body, "Some content here."
-    end
-  end
-
-  context "POST #markdown_preview (authenticated)" do
-    setup do
-      @user = create(:user)
-      sign_in(@user)
-    end
-
-    should "render markdown as HTML" do
-      post markdown_preview_articles_url, params: { body: "# Hello\n\n**Bold** text" }
-      assert_response :success
-      assert_includes response.body, "<h1>Hello</h1>"
-      assert_includes response.body, "<strong>Bold</strong>"
-    end
-  end
-
-  context "POST #markdown_preview (unauthenticated)" do
-    should "require authentication" do
-      post markdown_preview_articles_url, params: { body: "# Hello" }
-      assert_response :redirect
     end
   end
 end
