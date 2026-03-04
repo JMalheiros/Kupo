@@ -76,7 +76,8 @@ class Views::Admin::Articles::Index < Views::Base
     div(class: "flex items-center justify-between p-4 rounded-lg border border-border") do
       a(
         href: helpers.preview_article_path(slug: article.slug),
-        class: "flex-1"
+        class: "flex-1",
+        data: { turbo_frame: "_top" }
       ) do
         div(class: "flex items-center gap-3") do
           render Components::Admin::StatusBadge.new(status: article.status)
