@@ -1,26 +1,17 @@
 class ArticlesQuery
-  def initialize(params:, authenticated: false)
+  def initialize(params:)
     @category = params[:category]
     @status = params[:status]
-    @authenticated = authenticated
   end
 
   def call
-    scope = base_scope
+    scope = Article.recent
     scope = filter_by_category(scope)
     scope = filter_by_status(scope)
     scope
   end
 
   private
-
-  def base_scope
-    if @authenticated
-      Article.recent
-    else
-      Article.published.recent
-    end
-  end
 
   def filter_by_category(scope)
     return scope unless @category.present?
@@ -29,7 +20,7 @@ class ArticlesQuery
   end
 
   def filter_by_status(scope)
-    return scope unless @authenticated && @status.present?
+    return scope unless @status.present?
 
     scope.where(status: @status)
   end

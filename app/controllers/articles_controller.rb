@@ -3,7 +3,7 @@ class ArticlesController < ApplicationController
 
   def index
     @categories = Category.all
-    @articles = ArticlesQuery.new(params: params, authenticated: authenticated?).call
+    @articles = ArticlesQuery.new(params: params).call
 
     render Views::Admin::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category])
   end

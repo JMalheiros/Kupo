@@ -8,63 +8,35 @@ class ArticlesQueryTest < ActiveSupport::TestCase
     @scheduled = create(:article, :scheduled)
   end
 
-  context "public (unauthenticated)" do
-    should "return only published articles" do
-      result = ArticlesQuery.new(params: {}, authenticated: false).call
-
-      assert_includes result, @published
-      assert_not_includes result, @draft
-      assert_not_includes result, @scheduled
-    end
-
-    should "filter by category" do
-      other = create(:article, :published)
-
-      result = ArticlesQuery.new(params: { category: @category.slug }, authenticated: false).call
-
-      assert_includes result, @published
-      assert_not_includes result, other
-    end
-
-    should "ignore status param" do
-      result = ArticlesQuery.new(params: { status: "draft" }, authenticated: false).call
-
-      assert_includes result, @published
-      assert_not_includes result, @draft
-    end
+  should "return all articles ordered by most recent" do
+    result = ArticlesQuery.new(params: {}).call
+    assert_includes result, @published
+    assert_includes result, @draft
+    assert_includes result, @scheduled
   end
 
-  context "admin (authenticated)" do
-    should "return all articles" do
-      result = ArticlesQuery.new(params: {}, authenticated: true).call
+  should "filter by category" do
+    other = create(:article, :published)
 
-      assert_includes result, @published
-      assert_includes result, @draft
-      assert_includes result, @scheduled
-    end
+    result = ArticlesQuery.new(params: { category: @category.slug }).call
 
-    should "filter by category" do
-      result = ArticlesQuery.new(params: { category: @category.slug }, authenticated: true).call
+    assert_includes result, @published
+    assert_not_includes result, other
+  end
 
-      assert_includes result, @published
-      assert_not_includes result, @draft
-      assert_not_includes result, @scheduled
-    end
+  should "filter by status" do
+    result = ArticlesQuery.new(params: { status: "draft" }).call
 
-    should "filter by status" do
-      result = ArticlesQuery.new(params: { status: "draft" }, authenticated: true).call
+    assert_not_includes result, @published
+    assert_includes result, @draft
+    assert_not_includes result, @scheduled
+  end
 
-      assert_not_includes result, @published
-      assert_includes result, @draft
-      assert_not_includes result, @scheduled
-    end
+  should "filter by category and status combined" do
+    draft_in_category = create(:article, :draft, categories: [ @category ])
 
-    should "filter by category and status combined" do
-      draft_in_category = create(:article, :draft, categories: [ @category ])
+    result = ArticlesQuery.new(params: { category: @category.slug, status: "draft" }).call
 
-      result = ArticlesQuery.new(params: { category: @category.slug, status: "draft" }, authenticated: true).call
-
-      assert_equal [ draft_in_category ], result.to_a
-    end
+    assert_equal [ draft_in_category ], result.to_a
   end
 end
