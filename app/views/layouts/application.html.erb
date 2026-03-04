@@ -31,8 +31,6 @@
         <nav class="flex items-center gap-4">
           <% if authenticated? %>
             <%= button_to "Sign out", session_path(Current.session), method: :delete, class: "text-sm text-muted-foreground hover:text-foreground cursor-pointer" %>
-          <% else %>
-            <a href="<%= new_session_path %>" class="text-sm text-muted-foreground hover:text-foreground">Sign in</a>
           <% end %>
         </nav>
       </div>
