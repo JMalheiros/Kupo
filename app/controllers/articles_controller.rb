@@ -1,22 +1,15 @@
 class ArticlesController < ApplicationController
-  allow_unauthenticated_access only: [ :index, :show ]
-
   before_action :set_article, only: [ :show, :edit, :update, :destroy, :publish ]
 
   def index
     @categories = Category.all
     @articles = ArticlesQuery.new(params: params, authenticated: authenticated?).call
 
-    if authenticated?
-      render Views::Admin::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category])
-    else
-      render Views::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category])
-    end
+    render Views::Admin::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category])
   end
 
   def show
-    modal = turbo_frame_request_id == "modal"
-    render Views::Articles::Show.new(article: @article, modal: modal)
+    render Views::Articles::Show.new(article: @article)
   end
 
   def new
@@ -74,11 +67,7 @@ class ArticlesController < ApplicationController
   private
 
   def set_article
-    @article = if authenticated?
-      Article.find_by!(slug: params[:slug])
-    else
-      Article.published.find_by!(slug: params[:slug])
-    end
+    @article = Article.find_by!(slug: params[:slug])
   end
 
   def article_params
