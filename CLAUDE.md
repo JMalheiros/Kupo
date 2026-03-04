@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-MStation is a Ruby on Rails 8.1 application using Ruby 4.0.1. It follows the Rails 8 "Solid" stack — SQLite3 for all databases, Solid Cache, Solid Queue, and Solid Cable replacing Redis entirely. Frontend is a single page application that uses Hotwire (Turbo + Stimulus), Phlex, RubyUI and import maps (no Node.js/bundler). There is only the root route, that starts on the Articles index, and the whole application updates the HTML using Hotwire.
+KUPO is a Ruby on Rails 8.1 application using Ruby 4.0.1. It follows the Rails 8 "Solid" stack — SQLite3 for all databases, Solid Cache, Solid Queue, and Solid Cable replacing Redis entirely. Frontend is a single page application that uses Hotwire (Turbo + Stimulus), Phlex, RubyUI and import maps (no Node.js/bundler). There is only the root route, that starts on the Articles index, and the whole application updates the HTML using Hotwire.
 
 ## Common Commands
 

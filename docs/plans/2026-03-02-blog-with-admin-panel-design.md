@@ -1,11 +1,11 @@
-# MStation Blog with Admin Panel — Design Document
+# KUPO Blog with Admin Panel — Design Document
 
 **Date**: 2026-03-02
 **Status**: Approved
 
 ## Overview
 
-MStation is a single-author blog with an admin panel. The public side displays published articles with category filtering. The admin side provides markdown editing with live preview, scheduled publishing, and category management. The entire app runs as a single-page application using Hotwire (Turbo + Stimulus) with a single layout and auth-guarded admin features.
+KUPO is a single-author blog with an admin panel. The public side displays published articles with category filtering. The admin side provides markdown editing with live preview, scheduled publishing, and category management. The entire app runs as a single-page application using Hotwire (Turbo + Stimulus) with a single layout and auth-guarded admin features.
 
 ## Data Model
 

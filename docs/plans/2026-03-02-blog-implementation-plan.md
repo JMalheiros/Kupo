@@ -98,7 +98,7 @@ git commit -m "Generate Rails 8 authentication (User, Session, Authentication co
 # test/factories/users.rb
 FactoryBot.define do
   factory :user do
-    email_address { "admin@mstation.com" }
+    email_address { "admin@kupo.com" }
     password { "password123" }
   end
 end
@@ -2318,7 +2318,7 @@ The layout needs a header with site title, auth links, and the main content area
 <!DOCTYPE html>
 <html>
   <head>
-    <title>MStation</title>
+    <title>KUPO</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="csrf-token" content="<%= form_authenticity_token %>">
     <%= csrf_meta_tags %>
@@ -2332,7 +2332,7 @@ The layout needs a header with site title, auth links, and the main content area
     <header class="border-b border-border">
       <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
         <a href="/" class="text-xl font-bold text-foreground hover:text-primary transition-colors">
-          MStation
+          KUPO
         </a>
 
         <nav class="flex items-center gap-4">
@@ -2378,7 +2378,7 @@ git commit -m "Update application layout with header, auth links, and content ar
 ```ruby
 # db/seeds.rb
 puts "Creating admin user..."
-User.find_or_create_by!(email_address: "admin@mstation.com") do |user|
+User.find_or_create_by!(email_address: "admin@kupo.com") do |user|
   user.password = "password123"
 end
 

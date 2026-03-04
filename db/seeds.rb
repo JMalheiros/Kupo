@@ -1,5 +1,5 @@
 puts "Creating admin user..."
-User.find_or_create_by!(email_address: "admin@mstation.com") do |user|
+User.find_or_create_by!(email_address: "admin@kupo.com") do |user|
   user.password = "password123"
 end
 
