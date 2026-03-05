@@ -9,34 +9,32 @@ class Views::Passwords::New < Views::Base
   def view_template
     div(class: "max-w-md mx-auto px-4 py-12") do
       if @alert
-        p(id: "alert", class: "py-2 px-3 mb-5 text-sm font-medium rounded-lg bg-destructive/10 text-destructive") { plain @alert }
+        Alert(variant: :destructive, class: "mb-5") do
+          AlertDescription { plain @alert }
+        end
       end
 
-      h1(class: "text-3xl font-bold text-foreground mb-8") { "Forgot your password?" }
+      Heading(level: 1, class: "mb-8") { "Forgot your password?" }
 
       form(action: helpers.passwords_path, method: "post", class: "space-y-5") do
         input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
 
-        div do
-          label(for: "email_address", class: "block text-sm font-medium text-foreground mb-1") { "Email address" }
-          input(
-            type: "email",
+        FormField do
+          FormFieldLabel(for: "email_address") { "Email address" }
+          Input(
+            type: :email,
             name: "email_address",
             id: "email_address",
             required: true,
             autofocus: true,
             autocomplete: "username",
             placeholder: "Enter your email address",
-            value: @email_address,
-            class: "w-full px-4 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            value: @email_address
           )
         end
 
         div do
-          button(
-            type: "submit",
-            class: "px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium cursor-pointer"
-          ) { "Email reset instructions" }
+          Button(type: :submit) { "Email reset instructions" }
         end
       end
     end
