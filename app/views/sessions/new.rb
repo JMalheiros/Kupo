@@ -11,50 +11,42 @@ class Views::Sessions::New < Views::Base
     div(class: "max-w-md mx-auto px-4 py-12") do
       flash_messages
 
-      h1(class: "text-3xl font-bold text-foreground mb-8") { "Sign in" }
+      Heading(level: 1, class: "mb-8") { "Sign in" }
 
       form(action: helpers.session_path, method: "post", class: "space-y-5") do
         input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
 
-        div do
-          label(for: "email_address", class: "block text-sm font-medium text-foreground mb-1") { "Email address" }
-          input(
-            type: "email",
+        FormField do
+          FormFieldLabel(for: "email_address") { "Email address" }
+          Input(
+            type: :email,
             name: "email_address",
             id: "email_address",
             required: true,
             autofocus: true,
             autocomplete: "username",
             placeholder: "Enter your email address",
-            value: @email_address,
-            class: "w-full px-4 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            value: @email_address
           )
         end
 
-        div do
-          label(for: "password", class: "block text-sm font-medium text-foreground mb-1") { "Password" }
-          input(
-            type: "password",
+        FormField do
+          FormFieldLabel(for: "password") { "Password" }
+          Input(
+            type: :password,
             name: "password",
             id: "password",
             required: true,
             autocomplete: "current-password",
             placeholder: "Enter your password",
-            maxlength: 72,
-            class: "w-full px-4 py-2 border border-input rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            maxlength: 72
           )
         end
 
         div(class: "flex items-center justify-between gap-4") do
-          button(
-            type: "submit",
-            class: "px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium cursor-pointer"
-          ) { "Sign in" }
+          Button(type: :submit) { "Sign in" }
 
-          a(
-            href: helpers.new_password_path,
-            class: "text-sm text-muted-foreground hover:text-foreground transition-colors"
-          ) { "Forgot password?" }
+          Link(href: helpers.new_password_path, variant: :link) { "Forgot password?" }
         end
       end
     end
@@ -64,11 +56,15 @@ class Views::Sessions::New < Views::Base
 
   def flash_messages
     if @alert
-      p(id: "alert", class: "py-2 px-3 mb-5 text-sm font-medium rounded-lg bg-destructive/10 text-destructive") { plain @alert }
+      Alert(variant: :destructive, class: "mb-5") do
+        AlertDescription { plain @alert }
+      end
     end
 
     if @notice
-      p(id: "notice", class: "py-2 px-3 mb-5 text-sm font-medium rounded-lg bg-green-500/10 text-green-700 dark:text-green-400") { plain @notice }
+      Alert(variant: :success, class: "mb-5") do
+        AlertDescription { plain @notice }
+      end
     end
   end
 end
