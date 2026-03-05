@@ -15,6 +15,12 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+      }
+    </script>
+
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-animate-css@1/dist/tw-animate.css">
@@ -30,6 +36,7 @@
 
         <nav class="flex items-center gap-4">
           <% if authenticated? %>
+            <%= render Components::ThemeToggleButton.new %>
             <%= button_to "Sign out", session_path(Current.session), method: :delete, class: "text-sm text-muted-foreground hover:text-foreground cursor-pointer" %>
           <% end %>
         </nav>
