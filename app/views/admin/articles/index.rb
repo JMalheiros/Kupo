@@ -11,18 +11,20 @@ class Views::Admin::Articles::Index < Views::Base
   def view_template
     div(class: "max-w-4xl mx-auto px-4 py-8") do
       div(class: "flex items-center justify-between mb-8") do
-        h1(class: "text-3xl font-bold text-foreground") { "Articles" }
+        Heading(level: 1) { "Articles" }
 
         div(class: "flex gap-2") do
-          a(
+          Link(
             href: helpers.categories_path,
-            class: "px-4 py-2 text-sm border border-input rounded-lg hover:bg-accent transition-colors",
+            variant: :outline,
+            size: :sm,
             data: { turbo_frame: "modal" }
           ) { "Manage Categories" }
 
-          a(
+          Link(
             href: helpers.new_article_path,
-            class: "px-4 py-2 text-sm bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors",
+            variant: :primary,
+            size: :sm,
             data: { turbo_frame: "modal" }
           ) { "New Article" }
         end
@@ -80,7 +82,7 @@ class Views::Admin::Articles::Index < Views::Base
         data: { turbo_frame: "_top" }
       ) do
         div(class: "flex items-center gap-3") do
-          render Components::Admin::StatusBadge.new(status: article.status)
+          Badge(variant: status_variant(article.status)) { plain article.status.capitalize }
           h2(class: "text-lg font-medium text-foreground") { plain article.title }
         end
         p(class: "text-sm text-muted-foreground mt-1") do
@@ -93,21 +95,32 @@ class Views::Admin::Articles::Index < Views::Base
       end
 
       div(class: "flex items-center gap-2") do
-        a(
+        Link(
           href: helpers.edit_article_path(slug: article.slug),
-          class: "text-sm text-muted-foreground hover:text-foreground",
+          variant: :ghost,
+          size: :sm,
           data: { turbo_frame: "modal" }
         ) { "Edit" }
 
-        button(
+        Button(
+          variant: :ghost,
+          size: :sm,
           formaction: helpers.article_path(slug: article.slug),
           formmethod: "post",
           name: "_method",
           value: "delete",
-          class: "text-sm text-destructive hover:text-destructive/80 cursor-pointer",
+          class: "text-destructive hover:text-destructive/80",
           data: { turbo_confirm: "Are you sure you want to delete this article?" }
         ) { "Delete" }
       end
+    end
+  end
+
+  def status_variant(status)
+    case status
+    when "published" then :green
+    when "scheduled" then :yellow
+    when "draft" then :gray
     end
   end
 
