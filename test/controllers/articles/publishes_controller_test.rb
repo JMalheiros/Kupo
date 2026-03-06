@@ -22,7 +22,7 @@ class Articles::PublishesControllerTest < ActionDispatch::IntegrationTest
       article.reload
       assert_equal "published", article.status
       assert_not_nil article.published_at
-      assert_redirected_to preview_article_url(slug: article.slug)
+      assert_redirected_to articles_url
     end
 
     should "schedule an article for future publication" do
@@ -32,7 +32,7 @@ class Articles::PublishesControllerTest < ActionDispatch::IntegrationTest
 
       article.reload
       assert_equal "scheduled", article.status
-      assert_redirected_to preview_article_url(slug: article.slug)
+      assert_redirected_to articles_url
     end
   end
 end

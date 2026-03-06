@@ -18,7 +18,7 @@ class ArticlesController < ApplicationController
     @article = Article.new(article_params)
 
     if @article.save
-      redirect_to preview_article_url(slug: @article.slug)
+      redirect_to articles_url
     else
       @categories = Category.all
       render Views::Admin::Articles::Form.new(article: @article, categories: @categories), status: :unprocessable_entity
@@ -32,7 +32,7 @@ class ArticlesController < ApplicationController
 
   def update
     if @article.update(article_params)
-      redirect_to preview_article_url(slug: @article.slug)
+      redirect_to articles_url
     else
       @categories = Category.all
       render Views::Admin::Articles::Form.new(article: @article, categories: @categories), status: :unprocessable_entity

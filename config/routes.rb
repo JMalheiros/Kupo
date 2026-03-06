@@ -5,7 +5,6 @@ Rails.application.routes.draw do
   resources :articles, param: :slug, only: [ :index, :new, :create, :edit, :update, :destroy ] do
     member do
       post :publish, to: "articles/publishes#create"
-      get :preview, to: "articles/previews#show"
       get :export, to: "articles/exports#create"
     end
     collection do

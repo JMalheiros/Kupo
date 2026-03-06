@@ -29,14 +29,6 @@ class ArticlesTest < ApplicationSystemTestCase
     assert_no_text "Untagged Article"
   end
 
-  test "authenticated user can preview an article" do
-    sign_in_as(@user)
-    assert_text "Articles" # Wait for index to load after sign in
-    visit preview_article_path(slug: @published.slug)
-    assert_text @published.title
-    assert_text "Export Markdown"
-  end
-
   private
 
   def sign_in_as(user)

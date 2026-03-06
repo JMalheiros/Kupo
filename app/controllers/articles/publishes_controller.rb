@@ -10,7 +10,7 @@ module Articles
         @article.schedule!(Time.zone.parse(params[:published_at]))
       end
 
-      redirect_to preview_article_url(slug: @article.slug)
+      redirect_to articles_url
     end
   end
 end
