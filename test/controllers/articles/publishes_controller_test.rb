@@ -17,7 +17,10 @@ class Articles::PublishesControllerTest < ActionDispatch::IntegrationTest
 
     should "publish an article immediately" do
       article = create(:article, :draft)
-      post publish_article_url(slug: article.slug), params: { publish_action: "now" }
+
+      perform_enqueued_jobs do
+        post publish_article_url(slug: article.slug), params: { publish_action: "now" }
+      end
 
       article.reload
       assert_equal "published", article.status

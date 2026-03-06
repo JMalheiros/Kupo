@@ -63,11 +63,11 @@ class ArticleTest < ActiveSupport::TestCase
   end
 
   context "publishing" do
-    should "publish now sets status and published_at" do
+    should "publish now sets status to publishing and enqueues job" do
       article = create(:article, :draft)
       article.publish_now!
 
-      assert_equal "published", article.status
+      assert_equal "publishing", article.status
       assert_not_nil article.published_at
       assert article.published_at <= Time.current
     end
