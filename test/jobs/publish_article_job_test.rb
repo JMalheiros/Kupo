@@ -3,11 +3,13 @@
 require "test_helper"
 
 class PublishArticleJobTest < ActiveSupport::TestCase
-  should "publish a publishing article and set status to published" do
+  should "publish a publishing article when Hugo is configured" do
     article = create(:article, :publishing)
     user = create(:user)
 
-    PublishArticleJob.perform_now(article, user)
+    with_stubbed_hugo_publisher do
+      PublishArticleJob.perform_now(article, user)
+    end
 
     article.reload
     assert_equal "published", article.status
@@ -17,21 +19,22 @@ class PublishArticleJobTest < ActiveSupport::TestCase
     article = create(:article, :scheduled, published_at: 1.minute.ago)
     user = create(:user)
 
-    PublishArticleJob.perform_now(article, user)
+    with_stubbed_hugo_publisher do
+      PublishArticleJob.perform_now(article, user)
+    end
 
     article.reload
     assert_equal "published", article.status
   end
 
-  should "skip Hugo push when HUGO_REPO_SSH_URL is not configured and publish directly" do
+  should "revert to draft when Hugo is not configured" do
     article = create(:article, :publishing)
     user = create(:user)
 
-    # With no ENV vars set, should still transition to published
     PublishArticleJob.perform_now(article, user)
 
     article.reload
-    assert_equal "published", article.status
+    assert_equal "draft", article.status
   end
 
   should "not publish an article that is in draft state" do
@@ -56,12 +59,26 @@ class PublishArticleJobTest < ActiveSupport::TestCase
     assert_equal original_published_at.to_i, article.published_at.to_i
   end
 
-  should "work without a user argument" do
+  should "revert to draft without a user argument when Hugo is not configured" do
     article = create(:article, :publishing)
 
     PublishArticleJob.perform_now(article)
 
     article.reload
-    assert_equal "published", article.status
+    assert_equal "draft", article.status
+  end
+
+  private
+
+  def with_stubbed_hugo_publisher
+    original_new = HugoPublisher.method(:new)
+    stub_publisher = Class.new do
+      define_method(:call) { true }
+    end
+
+    HugoPublisher.define_singleton_method(:new) { |*_args| stub_publisher.new }
+    yield
+  ensure
+    HugoPublisher.define_singleton_method(:new, original_new)
   end
 end

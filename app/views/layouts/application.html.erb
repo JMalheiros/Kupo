@@ -48,7 +48,11 @@
         <%= turbo_stream_from Current.user %>
       <% end %>
 
-      <div id="notifications" class="fixed top-4 right-4 z-50 flex flex-col gap-2 w-80"></div>
+      <div id="notifications" class="fixed top-4 right-4 z-50 flex flex-col gap-2 w-80">
+        <% if flash[:toast].present? %>
+          <%= render partial: "shared/toast", locals: { variant: flash[:toast]["variant"]&.to_sym, message: flash[:toast]["message"] } %>
+        <% end %>
+      </div>
 
       <%= yield %>
     </main>

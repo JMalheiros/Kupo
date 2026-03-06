@@ -18,9 +18,15 @@ class Articles::PublishesControllerTest < ActionDispatch::IntegrationTest
     should "publish an article immediately" do
       article = create(:article, :draft)
 
+      original_new = HugoPublisher.method(:new)
+      stub_publisher = Class.new { define_method(:call) { true } }
+      HugoPublisher.define_singleton_method(:new) { |*_args| stub_publisher.new }
+
       perform_enqueued_jobs do
         post publish_article_url(slug: article.slug), params: { publish_action: "now" }
       end
+
+      HugoPublisher.define_singleton_method(:new, original_new)
 
       article.reload
       assert_equal "published", article.status

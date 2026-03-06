@@ -7,7 +7,7 @@ class ArticleTest < ActiveSupport::TestCase
     should validate_presence_of(:title)
     should validate_presence_of(:body)
     should validate_uniqueness_of(:slug)
-    should validate_inclusion_of(:status).in_array(%w[draft scheduled published])
+    should validate_inclusion_of(:status).in_array(%w[draft scheduled publishing published])
   end
 
   context "slug generation" do

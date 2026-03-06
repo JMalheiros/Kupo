@@ -3,10 +3,11 @@
 require "test_helper"
 
 class HugoPublisherTest < ActiveSupport::TestCase
-  should "skip publishing when Hugo ENV vars are not configured" do
+  should "raise NotConfiguredError when Hugo ENV vars are not configured" do
     article = create(:article, :publishing)
 
-    # With no ENV vars set, call should return nil (no-op)
-    assert_nil HugoPublisher.new(article).call
+    assert_raises(HugoPublisher::NotConfiguredError) do
+      HugoPublisher.new(article).call
+    end
   end
 end

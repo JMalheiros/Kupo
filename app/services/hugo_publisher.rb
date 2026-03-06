@@ -1,12 +1,18 @@
 # frozen_string_literal: true
 
 class HugoPublisher
+  class NotConfiguredError < StandardError
+    def initialize
+      super("Hugo publishing is not configured. Set HUGO_REPO_SSH_URL and HUGO_DEPLOY_KEY_PATH environment variables.")
+    end
+  end
+
   def initialize(article)
     @article = article
   end
 
   def call
-    return unless configured?
+    raise NotConfiguredError unless configured?
 
     tmp_dir = Dir.mktmpdir("hugo-publish")
 
