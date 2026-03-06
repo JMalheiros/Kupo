@@ -13,6 +13,7 @@ require "rails/test_help"
 
 require "shoulda/context"
 require "shoulda/matchers"
+require "mocha/minitest"
 
 module SignInHelper
   def sign_in(user)

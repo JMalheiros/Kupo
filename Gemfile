@@ -91,4 +91,5 @@ group :test do
   gem "simplecov", require: false
   gem "shoulda-matchers", "~> 7.0"
   gem "shoulda-context", "~> 2.0"
+  gem "mocha"
 end
