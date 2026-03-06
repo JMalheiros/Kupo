@@ -2,6 +2,7 @@ class Article < ApplicationRecord
   has_many :article_categories, dependent: :destroy
   has_many :categories, through: :article_categories
   has_many_attached :images
+  has_many :article_reviews, dependent: :destroy
 
   validates :title, presence: true
   validates :body, presence: true
