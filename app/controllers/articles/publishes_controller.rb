@@ -6,15 +6,11 @@ module Articles
       case params[:publish_action]
       when "now"
         @article.publish_now!
-        Rails.logger.info("'#{@article.title}' is being published...")
-        message = "'#{@article.title}' is being published..."
       when "schedule"
         datetime = "#{params[:published_at]} #{params[:publish_time]}"
         @article.schedule!(Time.zone.parse(datetime))
-        message = "'#{@article.title}' scheduled for #{@article.published_at.strftime('%B %d, %Y at %H:%M')}"
       end
 
-      flash[:toast] = { variant: "success", message: message }
       redirect_to articles_url
     end
   end
