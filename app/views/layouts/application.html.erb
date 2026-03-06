@@ -44,6 +44,12 @@
     </header>
 
     <main>
+      <% if authenticated? %>
+        <%= turbo_stream_from Current.user %>
+      <% end %>
+
+      <div id="notifications" class="fixed top-4 right-4 z-50 flex flex-col gap-2 w-80"></div>
+
       <%= yield %>
     </main>
   </body>
