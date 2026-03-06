@@ -1,0 +1,85 @@
+# frozen_string_literal: true
+
+class Views::Admin::Articles::ReviewTab < Views::Base
+  def initialize(article:)
+    @article = article
+    @latest_review = @article.article_reviews.order(created_at: :desc).first
+  end
+
+  def view_template
+    div(class: "space-y-6 py-4") do
+      # Subscribe to user's Turbo Stream channel for broadcast updates
+      if @article.persisted?
+        tag(:"turbo-cable-stream-source",
+          channel: "Turbo::StreamsChannel",
+          "signed-stream-name": Turbo::StreamsChannel.signed_stream_name(Current.user)
+        )
+      end
+
+      # Review button
+      if @article.persisted?
+        div(class: "flex justify-center") do
+          form(action: review_article_path(slug: @article.slug), method: "post") do
+            input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
+            Button(type: :submit, disabled: review_in_progress?) do
+              plain review_in_progress? ? "Review in progress..." : "Review Article"
+            end
+          end
+        end
+      else
+        p(class: "text-sm text-muted-foreground text-center") { "Save the article first to enable AI review." }
+      end
+
+      # Content Review Section
+      div do
+        Heading(level: 3, class: "mb-3") { "Content Review" }
+        p(class: "text-sm text-muted-foreground mb-3") { "Grammar, clarity, tone, and structure" }
+        div(id: "content-review-results") do
+          if @latest_review
+            render_section_status("content")
+          else
+            p(class: "text-sm text-muted-foreground") { "No review yet." }
+          end
+        end
+      end
+
+      # SEO Review Section
+      div do
+        Heading(level: 3, class: "mb-3") { "SEO & Metadata Review" }
+        p(class: "text-sm text-muted-foreground mb-3") { "Title, SEO, summaries, and tags" }
+        div(id: "seo-review-results") do
+          if @latest_review
+            render_section_status("seo")
+          else
+            p(class: "text-sm text-muted-foreground") { "No review yet." }
+          end
+        end
+      end
+    end
+  end
+
+  private
+
+  def review_in_progress?
+    @latest_review && (@latest_review.content_status == "pending" || @latest_review.seo_status == "pending")
+  end
+
+  def render_section_status(process)
+    status = process == "content" ? @latest_review.content_status : @latest_review.seo_status
+
+    case status
+    when "pending"
+      div(class: "flex items-center gap-2") do
+        span(class: "animate-pulse text-sm text-muted-foreground") { "Analyzing..." }
+      end
+    when "completed"
+      suggestions = @latest_review.review_suggestions.where(process: process)
+      render Views::Admin::Articles::ReviewSuggestionsList.new(
+        suggestions: suggestions,
+        article: @article
+      )
+    when "failed"
+      p(class: "text-sm text-destructive") { "Review failed. Please try again." }
+    end
+  end
+end

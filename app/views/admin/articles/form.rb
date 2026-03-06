@@ -97,7 +97,7 @@ class Views::Admin::Articles::Form < Views::Base
 
       # Markdown editor with preview
       div(class: "col-span-2 my-4") do
-        render Components::Admin::MarkdownPreview.new(body: @article.body)
+        render Components::Admin::MarkdownPreview.new(body: @article.body, article: @article)
       end
     end
   end

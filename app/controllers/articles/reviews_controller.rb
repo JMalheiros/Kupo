@@ -23,7 +23,10 @@ module Articles
 
       render turbo_stream: turbo_stream.replace(
         "suggestion-#{@suggestion.id}",
-        html: "<div id='suggestion-#{@suggestion.id}'>#{@suggestion.status}</div>"
+        Views::Admin::Articles::ReviewSuggestionCard.new(
+          suggestion: @suggestion,
+          article: @article
+        )
       )
     end
 

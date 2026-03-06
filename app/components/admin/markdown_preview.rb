@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Components::Admin::MarkdownPreview < Components::Base
-  def initialize(body: "")
+  def initialize(body: "", article: nil)
     @body = body
+    @article = article
   end
 
   def view_template
@@ -14,6 +15,7 @@ class Components::Admin::MarkdownPreview < Components::Base
             value: "preview",
             data: { action: "click->markdown-preview#fetchPreview" }
           ) { "Preview" }
+          TabsTrigger(value: "review") { "Review" } if @article&.persisted?
         end
 
         TabsContent(value: "write") do
@@ -31,6 +33,14 @@ class Components::Admin::MarkdownPreview < Components::Base
             data: { markdown_preview_target: "preview" }
           ) do
             raw safe(MarkdownRenderer.render(@body)) if @body.present?
+          end
+        end
+
+        if @article&.persisted?
+          TabsContent(value: "review") do
+            div(class: "min-h-[70vh] p-4 pb-2 border border-input rounded-lg bg-background overflow-y-auto") do
+              render Views::Admin::Articles::ReviewTab.new(article: @article)
+            end
           end
         end
       end
