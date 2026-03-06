@@ -120,10 +120,10 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
-    colorize (0.8.1)
     concurrent-ruby (1.3.6)
     connection_pool (3.0.2)
     crass (1.0.6)
+    csv (3.3.5)
     date (3.5.1)
     debug (1.11.1)
       irb (~> 1.10)
@@ -202,9 +202,8 @@ GEM
       activesupport (>= 7.0.0)
     jmespath (1.6.2)
     json (2.18.1)
-    json-schema (6.1.0)
+    json-schema (5.1.0)
       addressable (~> 2.8)
-      bigdecimal (>= 3.1, < 5)
     jwt (3.1.2)
       base64
     kamal (2.10.1)
@@ -218,10 +217,13 @@ GEM
       sshkit (>= 1.23.0, < 2.0)
       thor (~> 1.3)
       zeitwerk (>= 2.6.18, < 3.0)
-    langchainrb (0.5.7)
-      baran (~> 0.1.6)
-      colorize (~> 0.8.1)
-      tiktoken_ruby (~> 0.0.5)
+    langchainrb (0.19.5)
+      baran (~> 0.1.9)
+      csv
+      json-schema (>= 4, < 6)
+      matrix
+      pragmatic_segmenter (~> 0.3.0)
+      zeitwerk (~> 2.5)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -290,6 +292,7 @@ GEM
       zeitwerk (~> 2.7)
     pp (0.6.3)
       prettyprint
+    pragmatic_segmenter (0.3.24)
     prettyprint (0.2.0)
     prism (1.9.0)
     propshaft (1.3.1)
@@ -460,11 +463,6 @@ GEM
     thruster (0.1.18)
     thruster (0.1.18-aarch64-linux)
     thruster (0.1.18-x86_64-linux)
-    tiktoken_ruby (0.0.15.1-aarch64-linux)
-    tiktoken_ruby (0.0.15.1-aarch64-linux-musl)
-    tiktoken_ruby (0.0.15.1-arm-linux)
-    tiktoken_ruby (0.0.15.1-x86_64-linux)
-    tiktoken_ruby (0.0.15.1-x86_64-linux-musl)
     timeout (0.6.0)
     tsort (0.2.0)
     turbo-rails (2.0.23)
@@ -573,10 +571,10 @@ CHECKSUMS
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   bundler-audit (0.9.3) sha256=81c8766c71e47d0d28a0f98c7eed028539f21a6ea3cd8f685eb6f42333c9b4e9
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
-  colorize (0.8.1) sha256=0ba0c2a58232f9b706dc30621ea6aa6468eeea120eb6f1ccc400105b90c4798c
   concurrent-ruby (1.3.6) sha256=6b56837e1e7e5292f9864f34b69c5a2cbc75c0cf5338f1ce9903d10fa762d5ab
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
+  csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
   docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
@@ -613,10 +611,10 @@ CHECKSUMS
   jbuilder (2.14.1) sha256=4eb26376ff60ef100cb4fd6fd7533cd271f9998327e86adf20fd8c0e69fabb42
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   json (2.18.1) sha256=fe112755501b8d0466b5ada6cf50c8c3f41e897fa128ac5d263ec09eedc9f986
-  json-schema (6.1.0) sha256=6bf70a2cfb6dfd5a06da28093fa8190f324c88eabd36a7f47097f227321dc702
+  json-schema (5.1.0) sha256=c12729e346dce58ecc9be07301f4f247aeba1e3daae208e867278f3d27c64eb7
   jwt (3.1.2) sha256=af6991f19a6bb4060d618d9add7a66f0eeb005ac0bc017cd01f63b42e122d535
   kamal (2.10.1) sha256=53b7ecb4c33dd83b1aedfc7aacd1c059f835993258a552d70d584c6ce32b6340
-  langchainrb (0.5.7) sha256=98b88e54aa418474f010ad4ccdafd6949297601096f460ac05f2755e3bcf21e5
+  langchainrb (0.19.5) sha256=85eb3ae30df99da82065563b3ed1650d633fa6eceaadc6af90047b5793e30579
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
@@ -652,6 +650,7 @@ CHECKSUMS
   phlex (2.4.1) sha256=e596717fbfe38b5271840266758779ebe75092e02629f0c170287e6290a70b12
   phlex-rails (2.4.0) sha256=2bcddbd488681acb25753bab1887d3ac150e644244ff8ba307f2171a4d0195f5
   pp (0.6.3) sha256=2951d514450b93ccfeb1df7d021cae0da16e0a7f95ee1e2273719669d0ab9df6
+  pragmatic_segmenter (0.3.24) sha256=3c3709953efc06cd6a81c26bf7eeb083ace6f116932799b77f83b17aef4534c9
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85
   propshaft (1.3.1) sha256=9acc664ef67e819ffa3d95bd7ad4c3623ea799110c5f4dee67fa7e583e74c392
@@ -718,11 +717,6 @@ CHECKSUMS
   thruster (0.1.18) sha256=f025103bc7c8e6747436bb9de058c366840d2871560574ea7070a9bc8608a889
   thruster (0.1.18-aarch64-linux) sha256=16f3d49468d76a9a5de86b7bdedf535b7b80da7c16495ca8ec96cfdc256870e2
   thruster (0.1.18-x86_64-linux) sha256=0ec1ff5f12289c1ac10cf8e28ce6b5266f4e73416b34a664b79d037c7d955c40
-  tiktoken_ruby (0.0.15.1-aarch64-linux) sha256=e2c5d00b20c10bd220a103a271011bfa828e159cfba3b99d2c4029069bbb9198
-  tiktoken_ruby (0.0.15.1-aarch64-linux-musl) sha256=2b58d9f2b0615d876a767b756c117b1438e68354513aff3d540b665b8eb6559c
-  tiktoken_ruby (0.0.15.1-arm-linux) sha256=078faa950c93ec0929d6f70acc7f7374b044cb2561ee74fccf8ffbaf71068ed9
-  tiktoken_ruby (0.0.15.1-x86_64-linux) sha256=cc53f9c43e8a4d434831b5a5b10d94d4eb07ad15d0582d568e0e9c8293447dfc
-  tiktoken_ruby (0.0.15.1-x86_64-linux-musl) sha256=84c8fe1a94732cb241a3f353d2c191df56c6242614237d2433e510d8fab3ee26
   timeout (0.6.0) sha256=6d722ad619f96ee383a0c557ec6eb8c4ecb08af3af62098a0be5057bf00de1af
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   turbo-rails (2.0.23) sha256=ee0d90733aafff056cf51ff11e803d65e43cae258cc55f6492020ec1f9f9315f
