@@ -13,8 +13,8 @@ class Views::Sessions::New < Views::Base
 
       Heading(level: 1, class: "mb-8") { "Sign in" }
 
-      form(action: helpers.session_path, method: "post", class: "space-y-5") do
-        input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
+      form(action: session_path, method: "post", class: "space-y-5") do
+        input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
 
         FormField do
           FormFieldLabel(for: "email_address") { "Email address" }
@@ -46,7 +46,7 @@ class Views::Sessions::New < Views::Base
         div(class: "flex items-center justify-between gap-4") do
           Button(type: :submit) { "Sign in" }
 
-          Link(href: helpers.new_password_path, variant: :link) { "Forgot password?" }
+          Link(href: new_password_path, variant: :link) { "Forgot password?" }
         end
       end
     end

@@ -6,6 +6,7 @@ module Articles
       case params[:publish_action]
       when "now"
         @article.publish_now!
+        Rails.logger.info("'#{@article.title}' is being published...")
         message = "'#{@article.title}' is being published..."
       when "schedule"
         datetime = "#{params[:published_at]} #{params[:publish_time]}"

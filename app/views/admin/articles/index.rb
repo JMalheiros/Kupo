@@ -15,14 +15,14 @@ class Views::Admin::Articles::Index < Views::Base
 
         div(class: "flex gap-2") do
           Link(
-            href: helpers.categories_path,
+            href: categories_path,
             variant: :outline,
             size: :sm,
             data: { turbo_frame: "modal" }
           ) { "Manage Categories" }
 
           Link(
-            href: helpers.new_article_path,
+            href: new_article_path,
             variant: :primary,
             size: :sm,
             data: { turbo_frame: "modal" }

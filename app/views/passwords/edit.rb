@@ -16,8 +16,8 @@ class Views::Passwords::Edit < Views::Base
 
       Heading(level: 1, class: "mb-8") { "Update your password" }
 
-      form(action: helpers.password_path(@token), method: "post", class: "space-y-5") do
-        input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
+      form(action: password_path(@token), method: "post", class: "space-y-5") do
+        input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
         input(type: "hidden", name: "_method", value: "put")
 
         FormField do

@@ -16,8 +16,8 @@ class Views::Passwords::New < Views::Base
 
       Heading(level: 1, class: "mb-8") { "Forgot your password?" }
 
-      form(action: helpers.passwords_path, method: "post", class: "space-y-5") do
-        input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
+      form(action: passwords_path, method: "post", class: "space-y-5") do
+        input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
 
         FormField do
           FormFieldLabel(for: "email_address") { "Email address" }

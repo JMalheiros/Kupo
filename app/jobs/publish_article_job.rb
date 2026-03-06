@@ -16,7 +16,6 @@ class PublishArticleJob < ApplicationJob
       broadcast_toast(user, :success, "'#{article.title}' published successfully")
     end
   rescue => e
-    Rails.logger.error("Hugo publish failed for #{article.slug}: #{e.message}")
     article.update!(status: "draft")
     broadcast_toast(user, :destructive, "Failed to publish '#{article.title}'")
   end

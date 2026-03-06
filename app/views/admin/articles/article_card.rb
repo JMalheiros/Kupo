@@ -32,14 +32,14 @@ class Views::Admin::Articles::ArticleCard < Views::Base
 
       CardFooter(class: "flex justify-end gap-2") do
         Link(
-          href: helpers.edit_article_path(slug: @article.slug),
+          href: edit_article_path(slug: @article.slug),
           variant: :ghost,
           size: :md,
           data: { turbo_frame: "modal" }
         ) { "Edit" }
 
         Link(
-          href: helpers.export_article_path(slug: @article.slug),
+          href: export_article_path(slug: @article.slug),
           variant: :ghost,
           size: :md,
           data: { turbo: "false" }
@@ -47,8 +47,8 @@ class Views::Admin::Articles::ArticleCard < Views::Base
 
         render Views::Admin::Articles::PublishSheet.new(article: @article) unless %w[published publishing].include?(@article.status)
 
-        form(action: helpers.article_path(slug: @article.slug), method: "post") do
-          input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
+        form(action: article_path(slug: @article.slug), method: "post") do
+          input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
           input(type: "hidden", name: "_method", value: "delete")
           Button(
             type: :submit,

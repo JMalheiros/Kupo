@@ -12,14 +12,14 @@ class Views::Admin::Articles::Filters < Views::Base
     nav(class: "flex flex-wrap gap-2 mb-4") do
       status_params = @current_status ? { status: @current_status } : {}
       a(
-        href: helpers.root_path(**status_params),
+        href: root_path(**status_params),
         class: category_filter_class(nil),
         data: { turbo_frame: "articles" }
       ) { "All" }
 
       @categories.each do |category|
         a(
-          href: helpers.root_path(category: category.slug, **status_params),
+          href: root_path(category: category.slug, **status_params),
           class: category_filter_class(category.slug),
           data: { turbo_frame: "articles" }
         ) { plain category.name }
@@ -32,7 +32,7 @@ class Views::Admin::Articles::Filters < Views::Base
         params_hash = status == "all" ? {} : { status: status }
         params_hash[:category] = @current_category if @current_category
         a(
-          href: helpers.root_path(**params_hash),
+          href: root_path(**params_hash),
           class: status_filter_class(status),
           data: { turbo_frame: "articles" }
         ) { plain status.capitalize }

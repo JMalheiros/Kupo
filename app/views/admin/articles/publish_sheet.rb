@@ -19,8 +19,8 @@ class Views::Admin::Articles::PublishSheet < Views::Base
 
         SheetMiddle do
           # Publish Now
-          form(action: helpers.publish_article_path(slug: @article.slug), method: "post", class: "mb-4") do
-            input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
+          form(action: publish_article_path(slug: @article.slug), method: "post", class: "mb-4") do
+            input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
             input(type: "hidden", name: "publish_action", value: "now")
             Button(type: :submit, class: "w-full") { "Publish Now" }
           end
@@ -35,8 +35,8 @@ class Views::Admin::Articles::PublishSheet < Views::Base
           end
 
           # Schedule
-          form(action: helpers.publish_article_path(slug: @article.slug), method: "post") do
-            input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
+          form(action: publish_article_path(slug: @article.slug), method: "post") do
+            input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
             input(type: "hidden", name: "publish_action", value: "schedule")
 
             div(class: "space-y-2") do

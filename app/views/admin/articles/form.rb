@@ -25,7 +25,7 @@ class Views::Admin::Articles::Form < Views::Base
   private
 
   def form_content
-    url = @article.new_record? ? helpers.articles_path : helpers.article_path(slug: @article.slug)
+    url = @article.new_record? ? articles_path : article_path(slug: @article.slug)
     method = @article.new_record? ? "post" : "patch"
 
     form_with_tag(url: url, method: method) do
@@ -46,7 +46,7 @@ class Views::Admin::Articles::Form < Views::Base
       div(class: "col-span-1 mb-4") do
         FormField do
           FormFieldLabel { "Categories" }
-          Combobox(create_url: helpers.categories_path, create_param: "category[name]") do
+          Combobox(create_url: categories_path, create_param: "category[name]") do
             ComboboxTrigger(placeholder: "Select categories")
 
             ComboboxPopover do
@@ -105,7 +105,7 @@ class Views::Admin::Articles::Form < Views::Base
   def form_with_tag(url:, method:, &block)
     actual_method = method == "patch" ? "post" : method
     form(action: url, method: actual_method, class: "grid grid-cols-2 space-y-4 gap-3") do
-      input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
+      input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
       input(type: "hidden", name: "_method", value: method) if method == "patch"
       yield
     end
