@@ -39,4 +39,54 @@ class ArticlesQueryTest < ActiveSupport::TestCase
 
     assert_equal [ draft_in_category ], result.to_a
   end
+
+  # Sort tests
+  should "sort by newest (default)" do
+    old = create(:article, :published, published_at: 2.days.ago)
+    recent = create(:article, :published, published_at: 1.hour.ago)
+
+    result = ArticlesQuery.new(params: {}).call
+    published = result.select { |a| a.status == "published" }
+    assert published.index(recent) < published.index(old)
+  end
+
+  should "sort by oldest when sort param is oldest" do
+    old = create(:article, :published, published_at: 2.days.ago)
+    recent = create(:article, :published, published_at: 1.hour.ago)
+
+    result = ArticlesQuery.new(params: { sort: "oldest" }).call
+    published = result.select { |a| a.status == "published" }
+    assert published.index(old) < published.index(recent)
+  end
+
+  # Pagination tests
+  should "return first page of results with default page size" do
+    create_list(:article, 12, :published)
+
+    result = ArticlesQuery.new(params: { status: "published" }).call
+    assert_equal 10, result.size
+  end
+
+  should "return second page of results" do
+    create_list(:article, 12, :published)
+
+    result = ArticlesQuery.new(params: { status: "published", page: "2" }).call
+    assert_equal 3, result.size
+  end
+
+  should "return total count for pagination" do
+    create_list(:article, 12, :published)
+
+    query = ArticlesQuery.new(params: { status: "published" })
+    query.call
+    assert_equal 13, query.total_count
+  end
+
+  should "return total pages" do
+    create_list(:article, 22, :published)
+
+    query = ArticlesQuery.new(params: { status: "published" })
+    query.call
+    assert_equal 3, query.total_pages
+  end
 end
