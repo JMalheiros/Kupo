@@ -32,6 +32,12 @@ class Views::Admin::Articles::ArticleCard < Views::Base
           data: { turbo_frame: "modal" }
         ) { "Edit" }
 
+        Link(
+          href: helpers.export_article_path(slug: @article.slug),
+          variant: :ghost,
+          size: :md
+        ) { "Export" }
+
         Button(
           variant: :ghost,
           size: :md,
