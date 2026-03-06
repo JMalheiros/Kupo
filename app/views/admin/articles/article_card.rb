@@ -35,19 +35,23 @@ class Views::Admin::Articles::ArticleCard < Views::Base
         Link(
           href: helpers.export_article_path(slug: @article.slug),
           variant: :ghost,
-          size: :md
+          size: :md,
+          data: { turbo: "false" }
         ) { "Export" }
 
-        Button(
-          variant: :ghost,
-          size: :md,
-          formaction: helpers.article_path(slug: @article.slug),
-          formmethod: "post",
-          name: "_method",
-          value: "delete",
-          class: "text-destructive hover:text-destructive/80",
-          data: { turbo_confirm: "Are you sure you want to delete this article?" }
-        ) { "Delete" }
+        render Views::Admin::Articles::PublishSheet.new(article: @article) unless @article.status == "published"
+
+        form(action: helpers.article_path(slug: @article.slug), method: "post") do
+          input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
+          input(type: "hidden", name: "_method", value: "delete")
+          Button(
+            type: :submit,
+            variant: :ghost,
+            size: :md,
+            class: "text-destructive hover:text-destructive/80",
+            data: { turbo_confirm: "Are you sure you want to delete this article?" }
+          ) { "Delete" }
+        end
       end
     end
   end

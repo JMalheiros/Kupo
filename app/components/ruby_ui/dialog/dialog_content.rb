@@ -8,6 +8,7 @@ module RubyUI
       md: "max-w-lg",
       lg: "max-w-2xl",
       xl: "max-w-4xl",
+      xxl: "max-w-[90vw]",
       full: "max-w-full"
     }
 
@@ -17,7 +18,7 @@ module RubyUI
     end
 
     def view_template
-      template(data: {ruby_ui__dialog_target: "content"}) do
+      template(data: { ruby_ui__dialog_target: "content" }) do
         div(data_controller: "ruby-ui--dialog") do
           backdrop
           div(**attrs) do
@@ -34,7 +35,7 @@ module RubyUI
       {
         data_state: "open",
         class: [
-          "fixed flex flex-col pointer-events-auto left-[50%] top-[50%] z-50 w-full max-h-screen overflow-y-auto translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 sm:rounded-lg md:w-full",
+          "fixed flex flex-col pointer-events-auto left-[50%] top-[50%] z-50 w-full max-h-[90vh] overflow-y-auto translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 sm:rounded-lg md:w-full",
           SIZES[@size]
         ]
       }

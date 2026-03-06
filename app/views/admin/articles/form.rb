@@ -9,12 +9,12 @@ class Views::Admin::Articles::Form < Views::Base
   def view_template
     turbo_frame_tag("modal") do
       Dialog(open: true) do
-        DialogContent(size: :xl) do
+        DialogContent(size: :xxl) do
           DialogHeader do
             DialogTitle { plain @article.new_record? ? "New Article" : "Edit Article" }
           end
 
-          DialogMiddle do
+          DialogMiddle(class: "py-0") do
             form_content
           end
         end
@@ -30,7 +30,7 @@ class Views::Admin::Articles::Form < Views::Base
 
     form_with_tag(url: url, method: method) do
       # Title
-      FormField(class: "mb-4") do
+      FormField(class: "col-span-2 mb-4") do
         FormFieldLabel(for: "article_title") { "Title" }
         Input(
           type: :text,
@@ -43,17 +43,22 @@ class Views::Admin::Articles::Form < Views::Base
       end
 
       # Categories (Combobox multi-select)
-      div(class: "mb-4") do
+      div(class: "col-span-1 mb-4") do
         FormField do
           FormFieldLabel { "Categories" }
-          Combobox(term: "categories") do
+          Combobox(create_url: helpers.categories_path, create_param: "category[name]") do
             ComboboxTrigger(placeholder: "Select categories")
 
             ComboboxPopover do
-              ComboboxSearchInput(placeholder: "Search categories...")
+              ComboboxSearchInput(
+                placeholder: "Search or create categories...",
+                data: { action: "keydown->ruby-ui--combobox#onSearchKeydown" }
+              )
 
-              ComboboxList do
-                ComboboxEmptyState { "No categories found" }
+              ComboboxList(id: "category-combobox-list") do
+                ComboboxEmptyState do
+                  plain "No categories found. Press Enter to create."
+                end
 
                 @categories.each do |category|
                   ComboboxItem do
@@ -73,13 +78,8 @@ class Views::Admin::Articles::Form < Views::Base
         end
       end
 
-      # Markdown editor with preview
-      div(class: "mb-4") do
-        render Components::Admin::MarkdownPreview.new(body: @article.body)
-      end
-
       # Image upload
-      div(class: "mb-6", data: { controller: "image-upload" }) do
+      div(class: "col-span-1", data: { controller: "image-upload" }) do
         FormField do
           FormFieldLabel { "Upload Image" }
           Input(
@@ -91,15 +91,20 @@ class Views::Admin::Articles::Form < Views::Base
       end
 
       # Submit
-      div(class: "flex justify-end gap-4") do
+      div(class: "col-span-2 flex justify-end gap-4") do
         Button(type: :submit) { plain @article.new_record? ? "Create Article" : "Update Article" }
+      end
+
+      # Markdown editor with preview
+      div(class: "col-span-2 my-4") do
+        render Components::Admin::MarkdownPreview.new(body: @article.body)
       end
     end
   end
 
   def form_with_tag(url:, method:, &block)
     actual_method = method == "patch" ? "post" : method
-    form(action: url, method: actual_method, class: "space-y-4") do
+    form(action: url, method: actual_method, class: "grid grid-cols-2 space-y-4 gap-3") do
       input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
       input(type: "hidden", name: "_method", value: method) if method == "patch"
       yield

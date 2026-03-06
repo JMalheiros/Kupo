@@ -4,7 +4,9 @@ import { computePosition, autoUpdate, offset, flip } from "@floating-ui/dom";
 // Connects to data-controller="ruby-ui--combobox"
 export default class extends Controller {
   static values = {
-    term: String
+    term: String,
+    createUrl: String,
+    createParam: String
   }
 
   static targets = [
@@ -46,7 +48,7 @@ export default class extends Controller {
   }
 
   inputContent(input) {
-    return input.dataset.text || input.parentElement.textContent
+    return input.dataset.text || input.parentElement.textContent.trim()
   }
 
   toggleAllItems() {
@@ -169,6 +171,42 @@ export default class extends Controller {
 
   wrapSelectedInputIndex(length) {
     this.selectedItemIndex = ((this.selectedItemIndex % length) + length) % length
+  }
+
+  async onSearchKeydown(event) {
+    if (event.key !== "Enter") return
+    if (!this.hasCreateUrlValue) return
+
+    const emptyVisible = !this.emptyStateTarget.classList.contains("hidden")
+    if (!emptyVisible) return
+
+    event.preventDefault()
+
+    const name = this.searchInputTarget.value.trim()
+    if (!name) return
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+    const response = await fetch(this.createUrlValue, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRF-Token": csrfToken,
+        "Accept": "text/vnd.turbo-stream.html",
+        "X-Combobox-Create": "true"
+      },
+      body: `${this.createParamValue}=${encodeURIComponent(name)}`
+    })
+
+    if (response.ok) {
+      const html = await response.text()
+      Turbo.renderStreamMessage(html)
+
+      this.searchInputTarget.value = ""
+      this.searchInputTarget.dispatchEvent(new Event("search"))
+
+      // Wait for Stimulus to register the new targets after Turbo appends the DOM
+      requestAnimationFrame(() => this.updateTriggerContent())
+    }
   }
 
   updatePopoverPosition() {

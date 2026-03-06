@@ -1,0 +1,8 @@
+<div id="category_<%= category.id %>" class="flex items-center justify-between p-3 rounded-lg border border-border">
+  <span class="text-foreground"><%= category.name %></span>
+  <form action="<%= category_path(category) %>" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    <input type="hidden" name="_method" value="delete">
+    <button type="submit" class="inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground rounded-md h-8 px-3 text-xs text-destructive hover:text-destructive/80" data-turbo-confirm="Delete <%= category.name %>?">Delete</button>
+  </form>
+</div>

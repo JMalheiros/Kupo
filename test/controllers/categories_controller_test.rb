@@ -43,7 +43,7 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
       assert_difference("Category.count", 1) do
         post categories_url, params: { category: { name: "Ruby" } }
       end
-      assert_redirected_to categories_url
+      assert_response :success
     end
 
     should "not create category with blank name" do
@@ -65,7 +65,7 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
       assert_difference("Category.count", -1) do
         delete category_url(category)
       end
-      assert_redirected_to categories_url
+      assert_response :success
     end
   end
 end

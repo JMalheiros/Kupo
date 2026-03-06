@@ -1,36 +1,25 @@
 import { Controller } from "@hotwired/stimulus"
+import { DirectUpload } from "@rails/activestorage"
 
 export default class extends Controller {
   static targets = ["input"]
 
-  async upload(event) {
+  upload(event) {
     const file = event.target.files[0]
     if (!file) return
 
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+    const url = "/rails/active_storage/direct_uploads"
+    const directUpload = new DirectUpload(file, url)
 
-    const response = await fetch("/rails/active_storage/direct_uploads", {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": csrfToken,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        blob: {
-          filename: file.name,
-          content_type: file.type,
-          byte_size: file.size,
-          checksum: await this.computeChecksum(file),
-        },
-      }),
+    directUpload.create((error, blob) => {
+      if (error) {
+        console.error("Direct upload failed:", error)
+        return
+      }
+
+      const imageUrl = `/rails/active_storage/blobs/redirect/${blob.signed_id}/${blob.filename}`
+      this.insertMarkdownImage(file.name, imageUrl)
     })
-
-    if (response.ok) {
-      const blob = await response.json()
-      const url = `/rails/active_storage/blobs/redirect/${blob.signed_id}/${blob.filename}`
-      this.insertMarkdownImage(file.name, url)
-      await this.uploadToSignedUrl(blob.direct_upload.url, blob.direct_upload.headers, file)
-    }
   }
 
   insertMarkdownImage(name, url) {
@@ -44,19 +33,5 @@ export default class extends Controller {
 
     textarea.value = `${before}${imageTag}${after}`
     textarea.dispatchEvent(new Event("input"))
-  }
-
-  async uploadToSignedUrl(url, headers, file) {
-    await fetch(url, {
-      method: "PUT",
-      headers: headers,
-      body: file,
-    })
-  }
-
-  async computeChecksum(file) {
-    const buffer = await file.arrayBuffer()
-    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer)
-    return btoa(String.fromCharCode(...new Uint8Array(hashBuffer)))
   }
 }

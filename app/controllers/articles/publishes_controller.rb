@@ -7,7 +7,8 @@ module Articles
       when "now"
         @article.publish_now!
       when "schedule"
-        @article.schedule!(Time.zone.parse(params[:published_at]))
+        datetime = "#{params[:published_at]} #{params[:publish_time]}"
+        @article.schedule!(Time.zone.parse(datetime))
       end
 
       redirect_to articles_url
