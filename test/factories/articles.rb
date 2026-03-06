@@ -15,6 +15,11 @@ FactoryBot.define do
       published_at { 1.day.from_now }
     end
 
+    trait :publishing do
+      status { "publishing" }
+      published_at { Time.current }
+    end
+
     trait :published do
       status { "published" }
       published_at { 1.hour.ago }

@@ -9,7 +9,13 @@ class Views::Admin::Articles::ArticleCard < Views::Base
     Card do
       div(class: "flex-1") do
         CardHeader(class: "flex flex-row items-center gap-3 space-y-0 pb-2") do
-          Badge(variant: status_variant(@article.status)) { plain @article.status.capitalize }
+          Badge(variant: status_variant(@article.status)) do
+            if @article.status == "publishing"
+              span(class: "animate-pulse") { plain "Publishing" }
+            else
+              plain @article.status.capitalize
+            end
+          end
           CardTitle { plain @article.title }
         end
 
@@ -39,7 +45,7 @@ class Views::Admin::Articles::ArticleCard < Views::Base
           data: { turbo: "false" }
         ) { "Export" }
 
-        render Views::Admin::Articles::PublishSheet.new(article: @article) unless @article.status == "published"
+        render Views::Admin::Articles::PublishSheet.new(article: @article) unless %w[published publishing].include?(@article.status)
 
         form(action: helpers.article_path(slug: @article.slug), method: "post") do
           input(type: "hidden", name: "authenticity_token", value: helpers.form_authenticity_token)
@@ -62,6 +68,7 @@ class Views::Admin::Articles::ArticleCard < Views::Base
     case status
     when "published" then :green
     when "scheduled" then :yellow
+    when "publishing" then :blue
     when "draft" then :gray
     end
   end

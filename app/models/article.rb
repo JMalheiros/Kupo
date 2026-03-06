@@ -6,7 +6,7 @@ class Article < ApplicationRecord
   validates :title, presence: true
   validates :body, presence: true
   validates :slug, presence: true, uniqueness: true
-  validates :status, presence: true, inclusion: { in: %w[draft scheduled published] }
+  validates :status, presence: true, inclusion: { in: %w[draft scheduled publishing published] }
 
   before_validation :generate_slug, if: -> { slug.blank? }
 
@@ -16,12 +16,13 @@ class Article < ApplicationRecord
   scope :recent, -> { order(published_at: :desc) }
 
   def publish_now!
-    update!(status: "published", published_at: Time.current)
+    update!(status: "publishing", published_at: Time.current)
+    PublishArticleJob.perform_later(self, Current.user)
   end
 
   def schedule!(time)
     update!(status: "scheduled", published_at: time)
-    PublishArticleJob.set(wait_until: time).perform_later(self)
+    PublishArticleJob.set(wait_until: time).perform_later(self, Current.user)
   end
 
   private
