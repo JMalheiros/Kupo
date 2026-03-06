@@ -3,9 +3,18 @@ class ArticlesController < ApplicationController
 
   def index
     @categories = Category.all
-    @articles = ArticlesQuery.new(params: params).call
+    @query = ArticlesQuery.new(params: params)
+    @articles = @query.call
 
-    render Views::Admin::Articles::Index.new(articles: @articles, categories: @categories, current_category: params[:category], current_status: params[:status])
+    render Views::Admin::Articles::Index.new(
+      articles: @articles,
+      categories: @categories,
+      current_category: params[:category],
+      current_status: params[:status],
+      current_sort: params[:sort],
+      current_page: (params[:page] || 1).to_i,
+      total_pages: @query.total_pages
+    )
   end
 
   def new
