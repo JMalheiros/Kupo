@@ -64,6 +64,35 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
       assert_includes response.body, in_category.title
       assert_not_includes response.body, other.title
     end
+
+    should "paginate articles showing 10 per page" do
+      create_list(:article, 12, :published)
+
+      get root_url
+      assert_response :success
+    end
+
+    should "show second page of articles" do
+      create_list(:article, 12, :published)
+
+      get root_url, params: { page: 2 }
+      assert_response :success
+    end
+
+    should "sort articles by oldest" do
+      create_list(:article, 3, :published)
+
+      get root_url, params: { sort: "oldest" }
+      assert_response :success
+    end
+
+    should "combine filter, sort, and pagination" do
+      category = create(:category, name: "Elixir")
+      create_list(:article, 3, :published, categories: [ category ])
+
+      get root_url, params: { category: category.slug, sort: "oldest", page: 1 }
+      assert_response :success
+    end
   end
 
   context "GET #new (authenticated)" do

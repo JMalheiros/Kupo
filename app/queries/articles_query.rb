@@ -7,7 +7,7 @@ class ArticlesQuery
     @category = params[:category]
     @status = params[:status]
     @sort = params[:sort]
-    @page = [(params[:page] || 1).to_i, 1].max
+    @page = [ (params[:page] || 1).to_i, 1 ].max
   end
 
   def call
