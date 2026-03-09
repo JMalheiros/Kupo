@@ -1,13 +1,8 @@
-require "rouge"
-require "rouge/plugins/redcarpet"
+require "renderers/markdown_html_renderer"
 
 class MarkdownRenderer
-  class HTMLRenderer < Redcarpet::Render::HTML
-    include Rouge::Plugins::Redcarpet
-  end
-
   RENDERER = Redcarpet::Markdown.new(
-    HTMLRenderer.new(hard_wrap: true, link_attributes: { target: "_blank", rel: "noopener" }),
+    MarkdownHTMLRenderer.new(hard_wrap: true, link_attributes: { target: "_blank", rel: "noopener" }),
     fenced_code_blocks: true,
     autolink: true,
     tables: true,

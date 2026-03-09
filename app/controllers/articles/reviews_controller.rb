@@ -23,7 +23,7 @@ module Articles
 
       render turbo_stream: turbo_stream.replace(
         "suggestion-#{@suggestion.id}",
-        Views::Admin::Articles::ReviewSuggestionCard.new(
+        Components::Admin::Reviews::ReviewSuggestionCard.new(
           suggestion: @suggestion,
           article: @article
         )

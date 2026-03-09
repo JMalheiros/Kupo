@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Admin::Articles::ReviewTab < Views::Base
+class Components::Admin::Reviews < Components::Base
   def initialize(article:)
     @article = article
     @latest_review = @article.article_reviews.order(created_at: :desc).first
@@ -8,7 +8,6 @@ class Views::Admin::Articles::ReviewTab < Views::Base
 
   def view_template
     div(class: "space-y-6 py-4") do
-      # Subscribe to user's Turbo Stream channel for broadcast updates
       if @article.persisted?
         tag(:"turbo-cable-stream-source",
           channel: "Turbo::StreamsChannel",
@@ -16,7 +15,6 @@ class Views::Admin::Articles::ReviewTab < Views::Base
         )
       end
 
-      # Review button
       if @article.persisted?
         div(class: "flex justify-center") do
           form(action: review_article_path(slug: @article.slug), method: "post") do
@@ -74,7 +72,7 @@ class Views::Admin::Articles::ReviewTab < Views::Base
       end
     when "completed"
       suggestions = @latest_review.review_suggestions.where(process: process)
-      render Views::Admin::Articles::ReviewSuggestionsList.new(
+      render Components::Admin::Reviews::ReviewSuggestionsList.new(
         suggestions: suggestions,
         article: @article
       )

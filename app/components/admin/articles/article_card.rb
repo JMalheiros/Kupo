@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Admin::Articles::ArticleCard < Views::Base
+class Components::Admin::Articles::ArticleCard < Components::Base
   def initialize(article:)
     @article = article
   end
@@ -45,7 +45,7 @@ class Views::Admin::Articles::ArticleCard < Views::Base
           data: { turbo: "false" }
         ) { "Export" }
 
-        render Views::Admin::Articles::PublishSheet.new(article: @article) unless %w[published publishing].include?(@article.status)
+        render Components::Admin::Articles::PublishSheet.new(article: @article) unless %w[published publishing].include?(@article.status)
 
         form(action: article_path(slug: @article.slug), method: "post") do
           input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)

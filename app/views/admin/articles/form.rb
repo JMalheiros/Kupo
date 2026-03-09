@@ -15,7 +15,11 @@ class Views::Admin::Articles::Form < Views::Base
           end
 
           DialogMiddle(class: "py-0") do
-            form_content
+            if @article.persisted?
+              tabbed_content
+            else
+              article_form
+            end
           end
         end
       end
@@ -24,7 +28,21 @@ class Views::Admin::Articles::Form < Views::Base
 
   private
 
-  def form_content
+  def tabbed_content
+    div do
+      Tabs(default: "edit") do
+        TabsList do
+          TabsTrigger(value: "edit") { "Edit" }
+          TabsTrigger(value: "review") { "Review" }
+        end
+
+        TabsContent(class: "rounded-lg border border-border bg-muted/50 p-4", value: "edit") { article_form }
+        TabsContent(class: "rounded-lg border border-border bg-muted/50 p-4", value: "review") { render Components::Admin::Reviews.new(article: @article) }
+      end
+    end
+  end
+
+  def article_form
     url = @article.new_record? ? articles_path : article_path(slug: @article.slug)
     method = @article.new_record? ? "post" : "patch"
 
@@ -97,7 +115,7 @@ class Views::Admin::Articles::Form < Views::Base
 
       # Markdown editor with preview
       div(class: "col-span-2 my-4") do
-        render Components::Admin::MarkdownPreview.new(body: @article.body, article: @article)
+        render Components::Admin::Articles::MarkdownPreview.new(body: @article.body)
       end
     end
   end

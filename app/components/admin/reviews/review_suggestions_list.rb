@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Admin::Articles::ReviewSuggestionsList < Views::Base
+class Components::Admin::Reviews::ReviewSuggestionsList < Components::Base
   def initialize(suggestions:, article:)
     @suggestions = suggestions
     @article = article
@@ -10,7 +10,7 @@ class Views::Admin::Articles::ReviewSuggestionsList < Views::Base
     if @suggestions.any?
       div(class: "space-y-3") do
         @suggestions.each do |suggestion|
-          render Views::Admin::Articles::ReviewSuggestionCard.new(
+          render Components::Admin::Reviews::ReviewSuggestionCard.new(
             suggestion: suggestion,
             article: @article
           )

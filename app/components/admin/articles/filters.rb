@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Admin::Articles::Filters < Views::Base
+class Components::Admin::Articles::Filters < Components::Base
   def initialize(categories:, current_category: nil, current_status: nil, current_sort: nil)
     @categories = categories
     @current_category = current_category

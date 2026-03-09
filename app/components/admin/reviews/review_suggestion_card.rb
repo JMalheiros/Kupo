@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Admin::Articles::ReviewSuggestionCard < Views::Base
+class Components::Admin::Reviews::ReviewSuggestionCard < Components::Base
   def initialize(suggestion:, article:)
     @suggestion = suggestion
     @article = article
@@ -37,7 +37,7 @@ class Views::Admin::Articles::ReviewSuggestionCard < Views::Base
         end
       end
 
-      if @suggestion.status == "pending"
+      if @suggestion.status == "pending" && @suggestion.process == "content"
         div(class: "flex gap-2 pt-1") do
           form(
             action: article_review_suggestion_path(slug: @article.slug, id: @suggestion.id),

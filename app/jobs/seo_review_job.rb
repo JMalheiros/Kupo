@@ -28,7 +28,7 @@ class SeoReviewJob < ApplicationJob
     suggestions = review.review_suggestions.where(process: process)
 
     html = ApplicationController.render(
-      Views::Admin::Articles::ReviewSuggestionsList.new(
+      Components::Admin::Reviews::ReviewSuggestionsList.new(
         suggestions: suggestions,
         article: review.article
       ),

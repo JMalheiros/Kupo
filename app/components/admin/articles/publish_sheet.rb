@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Views::Admin::Articles::PublishSheet < Views::Base
+class Components::Admin::Articles::PublishSheet < Components::Base
   def initialize(article:)
     @article = article
   end
