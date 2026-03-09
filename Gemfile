@@ -59,6 +59,7 @@ gem "rouge", "~> 4.5"
 # LLM integration via Langchain
 gem "langchainrb"
 gem "gemini-ai"
+gem "phlex-icons"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

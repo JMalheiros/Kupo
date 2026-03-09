@@ -20,6 +20,7 @@ class Components::Admin::Reviews < Components::Base
           form(action: review_article_path(slug: @article.slug), method: "post") do
             input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
             Button(type: :submit, disabled: review_in_progress?) do
+              Lucide::Sparkles(variant: :filled, class: "h-4 w-4 mr-1.5 inline-block")
               plain review_in_progress? ? "Review in progress..." : "Review Article"
             end
           end

@@ -14,11 +14,11 @@ class Components::Admin::Articles::ArticlePagination < Components::Base
       PaginationContent do
         if @current_page > 1
           PaginationItem(href: page_path(1), data: { turbo_frame: "articles" }) do
-            chevrons_left_icon
+            Lucide::ChevronsLeft(variant: :solid, class: "h-4 w-4")
             plain "First"
           end
           PaginationItem(href: page_path(@current_page - 1), data: { turbo_frame: "articles" }) do
-            chevron_left_icon
+            Lucide::ChevronLeft(variant: :solid, class: "h-4 w-4")
             plain "Prev"
           end
         end
@@ -36,11 +36,11 @@ class Components::Admin::Articles::ArticlePagination < Components::Base
         if @current_page < @total_pages
           PaginationItem(href: page_path(@current_page + 1), data: { turbo_frame: "articles" }) do
             plain "Next"
-            chevron_right_icon
+            Lucide::ChevronRight(variant: :solid, class: "h-4 w-4")
           end
           PaginationItem(href: page_path(@total_pages), data: { turbo_frame: "articles" }) do
             plain "Last"
-            chevrons_right_icon
+            Lucide::ChevronsRight(variant: :solid, class: "h-4 w-4")
           end
         end
       end
@@ -73,33 +73,4 @@ class Components::Admin::Articles::ArticlePagination < Components::Base
     root_path(**params)
   end
 
-  def chevrons_left_icon
-    svg(xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewbox: "0 0 24 24", stroke_width: "1.5", stroke: "currentColor", fill: "none", stroke_linecap: "round", stroke_linejoin: "round", class: "h-4 w-4") do |s|
-      s.path(stroke: "none", d: "M0 0h24v24H0z", fill: "none")
-      s.path(d: "M11 7l-5 5l5 5")
-      s.path(d: "M17 7l-5 5l5 5")
-    end
-  end
-
-  def chevron_left_icon
-    svg(xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewbox: "0 0 24 24", stroke_width: "1.5", stroke: "currentColor", fill: "none", stroke_linecap: "round", stroke_linejoin: "round", class: "h-4 w-4") do |s|
-      s.path(stroke: "none", d: "M0 0h24v24H0z", fill: "none")
-      s.path(d: "M15 6l-6 6l6 6")
-    end
-  end
-
-  def chevrons_right_icon
-    svg(xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewbox: "0 0 24 24", stroke_width: "1.5", stroke: "currentColor", fill: "none", stroke_linecap: "round", stroke_linejoin: "round", class: "h-4 w-4") do |s|
-      s.path(stroke: "none", d: "M0 0h24v24H0z", fill: "none")
-      s.path(d: "M7 7l5 5l-5 5")
-      s.path(d: "M13 7l5 5l-5 5")
-    end
-  end
-
-  def chevron_right_icon
-    svg(xmlns: "http://www.w3.org/2000/svg", width: "24", height: "24", viewbox: "0 0 24 24", stroke_width: "1.5", stroke: "currentColor", fill: "none", stroke_linecap: "round", stroke_linejoin: "round", class: "h-4 w-4") do |s|
-      s.path(stroke: "none", d: "M0 0h24v24H0z", fill: "none")
-      s.path(d: "M9 6l6 6l-6 6")
-    end
-  end
 end
