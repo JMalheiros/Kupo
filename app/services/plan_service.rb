@@ -9,6 +9,19 @@ class PlanService
     required: %w[plan]
   }.freeze
 
+  BASE_PLAN_PROMPT = <<~PROMPT.freeze
+    The plan should include:
+    - A clear outline with sections and subsections (using markdown headings)
+    - Key points to cover in each section
+    - Suggested flow and transitions between sections
+
+    %{context}
+
+    Article title: %{title}
+    Article body:
+    %{body}
+  PROMPT
+
   def initialize(user)
     @setting = Setting.for(user)
   end
@@ -20,7 +33,7 @@ class PlanService
       "No existing plan. Create one from scratch."
     end
 
-    prompt = format(@setting.plan_prompt, context: context, title: article.title, body: article.body)
+    prompt = format(@setting.plan_prompt + BASE_PLAN_PROMPT, context: context, title: article.title, body: article.body)
     response = call_llm(prompt)
     parsed = JSON.parse(response.to_s)
     parsed["plan"]

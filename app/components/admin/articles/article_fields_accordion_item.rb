@@ -17,7 +17,7 @@ class Components::Admin::Articles::ArticleFieldsAccordionItem < Components::Base
       end
       AccordionContent do
         render Components::Admin::Articles::ArticleFields.new(article: @article, categories: @categories)
-        div(class: "col-span-3 flex justify-end items-center gap-4 mt-4") do
+        div(class: "col-span-3 flex justify-end items-center gap-4 mt-4 mb-4") do
           render Components::Admin::Articles::SubmitButton.new(article: @article)
         end
       end

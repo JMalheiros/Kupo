@@ -8,9 +8,27 @@ fi
 # Default to port 3000 if not specified
 export PORT="${PORT:-3000}"
 
+# Parse -b / --binding option
+BINDING=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -b|--binding)
+      BINDING="$2"
+      shift 2
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+if [ -n "$BINDING" ]; then
+  export BINDING
+fi
+
 # Let the debug gem allow remote connections,
 # but avoid loading until `debugger` is called
 export RUBY_DEBUG_OPEN="true"
 export RUBY_DEBUG_LAZY="true"
 
-exec foreman start -f Procfile.dev "$@"
+exec foreman start -f Procfile.dev
