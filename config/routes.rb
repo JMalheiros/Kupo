@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   patch "articles/:slug/review_suggestions/:id", to: "articles/reviews#update_suggestion", as: :article_review_suggestion
 
   resources :categories, only: [ :index, :create, :destroy ]
+  resource :settings, only: [ :edit, :update ]
 
   get "up" => "rails/health#show", as: :rails_health_check
 

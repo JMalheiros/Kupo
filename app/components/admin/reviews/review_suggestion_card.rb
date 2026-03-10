@@ -37,7 +37,7 @@ class Components::Admin::Reviews::ReviewSuggestionCard < Components::Base
         end
       end
 
-      if @suggestion.status == "pending" && @suggestion.process == "content"
+      if @suggestion.status == "pending" && @suggestion.process != "content"
         div(class: "flex gap-2 pt-1") do
           form(
             action: article_review_suggestion_path(slug: @article.slug, id: @suggestion.id),

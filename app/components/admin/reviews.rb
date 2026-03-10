@@ -3,7 +3,7 @@
 class Components::Admin::Reviews < Components::Base
   def initialize(article:)
     @article = article
-    @latest_review = @article.article_reviews.order(created_at: :desc).first
+    @latest_review = @article.article_review
   end
 
   def view_template

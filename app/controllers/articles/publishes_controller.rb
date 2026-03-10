@@ -11,7 +11,7 @@ module Articles
         @article.schedule!(Time.zone.parse(datetime))
       end
 
-      redirect_to articles_url
+      redirect_to root_path, notice: "Article has been published successfully."
     end
   end
 end

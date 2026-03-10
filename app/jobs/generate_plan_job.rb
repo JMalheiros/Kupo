@@ -4,7 +4,7 @@ class GeneratePlanJob < ApplicationJob
   queue_as :default
 
   def perform(article, user)
-    plan = PlanService.new.generate_plan(article)
+    plan = PlanService.new(user).generate_plan(article)
 
     if plan.present?
       article.update!(plan: plan)

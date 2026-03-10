@@ -2,32 +2,49 @@ module Articles
   class ReviewsController < ApplicationController
     def create
       @article = Article.find_by!(slug: params[:slug])
-      review = @article.article_reviews.create!
+      review = @article.article_review
+
+      if review
+        review.review_suggestions.destroy_all
+        review.update!(content_status: "pending", seo_status: "pending")
+      else
+        review = @article.create_article_review!
+      end
+
+      @categories = Category.all
 
       ContentReviewJob.perform_later(review, Current.user)
       SeoReviewJob.perform_later(review, Current.user)
 
-      redirect_to edit_article_url(slug: @article.slug)
+      render Views::Admin::Articles::Form.new(article: @article, categories: @categories)
     end
 
     def update_suggestion
       @article = Article.find_by!(slug: params[:slug])
       @suggestion = ReviewSuggestion.find(params[:id])
+      @categories = Category.all
 
       if params[:status] == "accepted"
         apply_suggestion(@suggestion)
         @suggestion.update!(status: "accepted")
+        @article.reload
       else
         @suggestion.update!(status: "rejected")
       end
 
-      render turbo_stream: turbo_stream.replace(
-        "suggestion-#{@suggestion.id}",
-        Components::Admin::Reviews::ReviewSuggestionCard.new(
-          suggestion: @suggestion,
-          article: @article
+      render turbo_stream: [
+        turbo_stream.replace(
+          "suggestion-#{@suggestion.id}",
+          Components::Admin::Reviews::ReviewSuggestionCard.new(
+            suggestion: @suggestion,
+            article: @article
+          )
+        ),
+        turbo_stream.replace(
+          "modal",
+          Views::Admin::Articles::Form.new(article: @article, categories: @categories)
         )
-      )
+      ]
     end
 
     private

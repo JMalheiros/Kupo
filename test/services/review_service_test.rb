@@ -2,6 +2,7 @@ require "test_helper"
 
 class ReviewServiceTest < ActiveSupport::TestCase
   setup do
+    @user = create(:user)
     @article = create(:article, :draft, title: "My Article", body: "This is a test artcle about Ruby on Rails.")
   end
 
@@ -12,7 +13,7 @@ class ReviewServiceTest < ActiveSupport::TestCase
       ]
     }.to_json
 
-    service = ReviewService.new
+    service = ReviewService.new(@user)
     service.define_singleton_method(:call_llm) { |_prompt, _schema| fake_response }
 
     result = service.content_review(@article)
@@ -30,7 +31,7 @@ class ReviewServiceTest < ActiveSupport::TestCase
       ]
     }.to_json
 
-    service = ReviewService.new
+    service = ReviewService.new(@user)
     service.define_singleton_method(:call_llm) { |_prompt, _schema| fake_response }
 
     result = service.seo_review(@article)
@@ -41,7 +42,7 @@ class ReviewServiceTest < ActiveSupport::TestCase
   end
 
   should "return empty array on invalid JSON response" do
-    service = ReviewService.new
+    service = ReviewService.new(@user)
     service.define_singleton_method(:call_llm) { |_prompt, _schema| "not valid json" }
 
     result = service.content_review(@article)
@@ -51,7 +52,7 @@ class ReviewServiceTest < ActiveSupport::TestCase
   should "return empty array when suggestions key is missing" do
     fake_response = { "other" => "data" }.to_json
 
-    service = ReviewService.new
+    service = ReviewService.new(@user)
     service.define_singleton_method(:call_llm) { |_prompt, _schema| fake_response }
 
     result = service.content_review(@article)

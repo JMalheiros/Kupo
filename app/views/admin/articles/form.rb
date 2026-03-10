@@ -53,9 +53,9 @@ class Views::Admin::Articles::Form < Views::Base
     method = @article.new_record? ? "post" : "patch"
 
     form_with_tag(url: url, method: method) do
-      article_fields
-      submit_button
-      markdown_editor
+      render Components::Admin::Articles::ArticleFields.new(article: @article, categories: @categories)
+      render Components::Admin::Articles::SubmitButton.new(article: @article)
+      render Components::Admin::Articles::MarkdownEditor.new(article: @article)
     end
   end
 
@@ -63,93 +63,20 @@ class Views::Admin::Articles::Form < Views::Base
     url = article_path(slug: @article.slug)
 
     form_with_tag(url: url, method: "patch") do
-      TabsContent(class: "col-span-3 rounded-lg border border-border bg-muted/50 p-4", value: "edit") do
-        article_fields
-        submit_button
-        markdown_editor
+      TabsContent(class: "col-span-3 rounded-lg border border-border bg-muted/50 p-4 mb-0", value: "edit") do
+        Accordion do
+          render Components::Admin::Articles::ArticleFieldsAccordionItem.new(article: @article, categories: @categories)
+          if @article.plan.present?
+            render Components::Admin::Articles::PlanPreviewAccordionItem.new(article: @article)
+          end
+        end
+        render Components::Admin::Articles::MarkdownEditor.new(article: @article)
       end
 
       TabsContent(class: "col-span-3 rounded-lg border border-border bg-muted/50 p-4", value: "plan") do
         render Components::Admin::Articles::ArticlePlan.new(article: @article)
-        div(class: "col-span-3 flex justify-end gap-4 mt-4") do
-          Button(type: :submit) { "Save Plan" }
-        end
+        render Components::Admin::Articles::SubmitButton.new(label: "Save Plan", class: "mt-4")
       end
-    end
-  end
-
-  def article_fields
-    # Title
-    FormField(class: "col-span-3 mb-4") do
-      FormFieldLabel(for: "article_title") { "Title" }
-      Input(
-        type: :text,
-        name: "article[title]",
-        id: "article_title",
-        value: @article.title,
-        required: true
-      )
-      render_errors_for(:title)
-    end
-
-    # Categories (Combobox multi-select)
-    div(class: "col-span-1 mb-4") do
-      FormField do
-        FormFieldLabel { "Categories" }
-        Combobox(create_url: categories_path, create_param: "category[name]") do
-          ComboboxTrigger(placeholder: "Select categories")
-
-          ComboboxPopover do
-            ComboboxSearchInput(
-              placeholder: "Search or create categories...",
-              data: { action: "keydown->ruby-ui--combobox#onSearchKeydown" }
-            )
-
-            ComboboxList(id: "category-combobox-list") do
-              ComboboxEmptyState do
-                plain "No categories found. Press Enter to create."
-              end
-
-              @categories.each do |category|
-                ComboboxItem do
-                  ComboboxCheckbox(
-                    name: "article[category_ids][]",
-                    value: category.id,
-                    checked: @article.category_ids.include?(category.id)
-                  )
-                  span { plain category.name }
-                end
-              end
-            end
-          end
-        end
-        # Hidden field to allow empty category_ids
-        input(type: "hidden", name: "article[category_ids][]", value: "")
-      end
-    end
-
-    # Image upload
-    div(class: "col-span-1", data: { controller: "image-upload" }) do
-      FormField do
-        FormFieldLabel { "Upload Image" }
-        Input(
-          type: :file,
-          accept: "image/*",
-          data: { image_upload_target: "input", action: "change->image-upload#upload" }
-        )
-      end
-    end
-  end
-
-  def submit_button
-    div(class: "col-span-3 flex justify-end gap-4") do
-      Button(type: :submit) { plain @article.new_record? ? "Create Article" : "Update Article" }
-    end
-  end
-
-  def markdown_editor
-    div(class: "col-span-3 my-4") do
-      render Components::Admin::Articles::MarkdownPreview.new(body: @article.body)
     end
   end
 
@@ -159,13 +86,6 @@ class Views::Admin::Articles::Form < Views::Base
       input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
       input(type: "hidden", name: "_method", value: method) if method == "patch"
       yield
-    end
-  end
-
-  def render_errors_for(field)
-    return unless @article.errors[field].any?
-    @article.errors[field].each do |error|
-      FormFieldError { plain error }
     end
   end
 end

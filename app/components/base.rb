@@ -7,6 +7,7 @@ class Components::Base < Phlex::HTML
   include PhlexIcons
 
   register_value_helper :form_authenticity_token
+  register_value_helper :authenticated?
 
   if Rails.env.development?
     def before_template

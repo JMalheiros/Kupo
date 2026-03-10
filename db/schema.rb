@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_09_192400) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_10_202412) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -39,6 +39,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_192400) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "api_keys", force: :cascade do |t|
+    t.string "api_key", null: false
+    t.datetime "created_at", null: false
+    t.string "provider", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id", "provider"], name: "index_api_keys_on_user_id_and_provider", unique: true
+    t.index ["user_id"], name: "index_api_keys_on_user_id"
+  end
+
   create_table "article_categories", force: :cascade do |t|
     t.integer "article_id", null: false
     t.integer "category_id", null: false
@@ -55,7 +65,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_192400) do
     t.datetime "created_at", null: false
     t.string "seo_status", default: "pending", null: false
     t.datetime "updated_at", null: false
-    t.index ["article_id"], name: "index_article_reviews_on_article_id"
+    t.index ["article_id"], name: "index_article_reviews_on_article_id", unique: true
   end
 
   create_table "articles", force: :cascade do |t|
@@ -103,6 +113,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_192400) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "settings", force: :cascade do |t|
+    t.text "content_review_prompt", null: false
+    t.datetime "created_at", null: false
+    t.string "llm_model", default: "gemini-3-flash", null: false
+    t.string "llm_provider", default: "gemini", null: false
+    t.text "plan_prompt", null: false
+    t.text "seo_review_prompt", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_settings_on_user_id", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email_address", null: false
@@ -113,9 +135,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_192400) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "api_keys", "users"
   add_foreign_key "article_categories", "articles"
   add_foreign_key "article_categories", "categories"
   add_foreign_key "article_reviews", "articles"
   add_foreign_key "review_suggestions", "article_reviews"
   add_foreign_key "sessions", "users"
+  add_foreign_key "settings", "users"
 end

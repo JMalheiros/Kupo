@@ -56,5 +56,4 @@ class Components::Admin::Articles::ArticlePlan < Components::Base
       end
     end
   end
-
 end

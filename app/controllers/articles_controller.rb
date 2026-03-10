@@ -25,11 +25,11 @@ class ArticlesController < ApplicationController
 
   def create
     @article = Article.new(article_params)
+    @categories = Category.all
 
     if @article.save
-      redirect_to articles_url
+      render Views::Admin::Articles::Form.new(article: @article, categories: @categories)
     else
-      @categories = Category.all
       render Views::Admin::Articles::Form.new(article: @article, categories: @categories), status: :unprocessable_entity
     end
   end
@@ -40,10 +40,11 @@ class ArticlesController < ApplicationController
   end
 
   def update
+    @categories = Category.all
+
     if @article.update(article_params)
-      redirect_to articles_url
+      render Views::Admin::Articles::Form.new(article: @article, categories: @categories)
     else
-      @categories = Category.all
       render Views::Admin::Articles::Form.new(article: @article, categories: @categories), status: :unprocessable_entity
     end
   end

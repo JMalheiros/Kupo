@@ -12,7 +12,6 @@
     <%= yield :head %>
 
     <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
     <script>
@@ -27,20 +26,9 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen bg-background text-foreground">
+  <body class="min-h-screen bg-[url(/moogle.png)] bg-size-[auto_50vh] bg-no-repeat bg-bottom-left text-foreground">
     <header class="border-b border-border">
-      <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="text-xl font-bold text-foreground hover:text-primary transition-colors">
-          KUPO
-        </a>
-
-        <nav class="flex items-center gap-4">
-          <% if authenticated? %>
-            <%= render Components::ThemeToggleButton.new %>
-            <%= button_to "Sign out", session_path(Current.session), method: :delete, class: "text-sm text-muted-foreground hover:text-foreground cursor-pointer" %>
-          <% end %>
-        </nav>
-      </div>
+      <%= render Components::Admin::Navbar.new %>
     </header>
 
     <main>

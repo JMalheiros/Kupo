@@ -2,7 +2,7 @@ class SeoReviewJob < ApplicationJob
   queue_as :default
 
   def perform(review, user)
-    suggestions = ReviewService.new.seo_review(review.article)
+    suggestions = ReviewService.new(user).seo_review(review.article)
 
     suggestions.each do |s|
       review.review_suggestions.create!(

@@ -71,7 +71,7 @@ module RubyUI
       div(
         data_state: "open",
         data_action: "click->ruby-ui--dialog#dismiss esc->ruby-ui--dialog#dismiss",
-        class: "fixed pointer-events-auto inset-0 z-50 bg-background/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0"
+        class: "fixed pointer-events-auto inset-0 z-50 bg-background/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0"
       )
     end
   end

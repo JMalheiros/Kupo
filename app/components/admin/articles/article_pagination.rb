@@ -72,5 +72,4 @@ class Components::Admin::Articles::ArticlePagination < Components::Base
     params[:page] = page if page > 1
     root_path(**params)
   end
-
 end

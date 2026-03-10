@@ -59,6 +59,8 @@ gem "rouge", "~> 4.5"
 # LLM integration via Langchain
 gem "langchainrb"
 gem "gemini-ai"
+gem "ruby-anthropic"
+gem "ruby-openai"
 gem "phlex-icons"
 
 group :development, :test do

@@ -1,21 +1,6 @@
 # frozen_string_literal: true
 
 class PlanService
-  PLAN_PROMPT = <<~PROMPT
-    You are an expert content strategist and article planner. Based on the article title, current content, and any existing plan, generate a structured article plan in markdown.
-
-    The plan should include:
-    - A clear outline with sections and subsections (using markdown headings)
-    - Key points to cover in each section
-    - Suggested flow and transitions between sections
-
-    %{context}
-
-    Article title: %{title}
-    Article body:
-    %{body}
-  PROMPT
-
   PLAN_RESPONSE_SCHEMA = {
     type: "object",
     properties: {
@@ -24,6 +9,10 @@ class PlanService
     required: %w[plan]
   }.freeze
 
+  def initialize(user)
+    @setting = Setting.for(user)
+  end
+
   def generate_plan(article)
     context = if article.plan.present?
       "The article already has a plan. Improve and refine it:\n#{article.plan}"
@@ -31,7 +20,7 @@ class PlanService
       "No existing plan. Create one from scratch."
     end
 
-    prompt = format(PLAN_PROMPT, context: context, title: article.title, body: article.body)
+    prompt = format(@setting.plan_prompt, context: context, title: article.title, body: article.body)
     response = call_llm(prompt)
     parsed = JSON.parse(response.to_s)
     parsed["plan"]
@@ -41,10 +30,7 @@ class PlanService
   end
 
   def call_llm(prompt)
-    llm = Langchain::LLM::GoogleGemini.new(
-      api_key: ENV.fetch("GEMINI_API_KEY"),
-      default_options: { chat_model: "gemini-2.5-flash" }
-    )
+    llm = LangchainClient.for_user(@setting.user)
 
     response = llm.chat(
       messages: [ { role: "user", parts: [ { text: prompt } ] } ],

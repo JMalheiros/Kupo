@@ -23,7 +23,25 @@ class Articles::ReviewsControllerTest < ActionDispatch::IntegrationTest
         end
       end
 
-      assert_redirected_to edit_article_url(slug: @article.slug)
+      assert_response :success
+    end
+
+    should "reuse existing review and replace suggestions on re-review" do
+      review = create(:article_review, article: @article, content_status: "completed", seo_status: "completed")
+      create(:review_suggestion, article_review: review)
+      create(:review_suggestion, :seo, article_review: review)
+
+      assert_no_difference("ArticleReview.count") do
+        assert_enqueued_jobs 2 do
+          post review_article_url(slug: @article.slug)
+        end
+      end
+
+      review.reload
+      assert_equal "pending", review.content_status
+      assert_equal "pending", review.seo_status
+      assert_equal 0, review.review_suggestions.count
+      assert_response :success
     end
   end
 
