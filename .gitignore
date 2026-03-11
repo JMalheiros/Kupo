@@ -10,6 +10,7 @@
 # Ignore all environment files.
 /.env
 /.ssh
+/.claude
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -32,6 +33,7 @@
 /public/assets
 
 /coverage
+/docs/*
 
 # Ignore key files for decrypting credentials and more.
 /config/*.key
