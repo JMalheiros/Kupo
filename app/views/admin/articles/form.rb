@@ -35,6 +35,7 @@ class Views::Admin::Articles::Form < Views::Base
           TabsTrigger(value: "plan") { "Plan" }
           TabsTrigger(value: "edit") { "Edit" }
           TabsTrigger(value: "review") { "Review" }
+          TabsTrigger(value: "translate") { "Translate" }
         end
 
         # Edit and Plan tabs are inside the same form
@@ -43,6 +44,10 @@ class Views::Admin::Articles::Form < Views::Base
         # Review tab is outside the form (has its own forms)
         TabsContent(class: "col-span-3 rounded-lg border border-border bg-muted/50 p-4", value: "review") do
           render Components::Admin::Reviews.new(article: @article)
+        end
+
+        TabsContent(class: "col-span-3 rounded-lg border border-border bg-muted/50 p-4", value: "translate") do
+          render Components::Admin::Translations.new(article: @article)
         end
       end
     end

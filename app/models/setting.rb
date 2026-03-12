@@ -13,6 +13,10 @@ class Setting < ApplicationRecord
     You are an SEO and content strategy expert. Review the following article and provide suggestions.
   PROMPT
 
+  DEFAULT_TRANSLATION_PROMPT = <<~PROMPT.freeze
+    You are a professional translator. Translate the following article accurately and naturally, preserving all markdown formatting.
+  PROMPT
+
   belongs_to :user
 
   validates :llm_provider, presence: true, inclusion: { in: %w[gemini claude openai] }
@@ -23,6 +27,7 @@ class Setting < ApplicationRecord
       plan_prompt: DEFAULT_PLAN_PROMPT ,
       content_review_prompt: DEFAULT_CONTENT_REVIEW_PROMPT,
       seo_review_prompt: DEFAULT_SEO_REVIEW_PROMPT,
+      translation_prompt: DEFAULT_TRANSLATION_PROMPT,
       llm_provider: "gemini",
       llm_model: "gemini-2.5-flash"
     )

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_10_202412) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_12_134029) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -68,6 +68,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_202412) do
     t.index ["article_id"], name: "index_article_reviews_on_article_id", unique: true
   end
 
+  create_table "article_translations", force: :cascade do |t|
+    t.integer "article_id", null: false
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.string "language", default: "en", null: false
+    t.string "status", default: "pending", null: false
+    t.text "title"
+    t.datetime "updated_at", null: false
+    t.index ["article_id", "language"], name: "index_article_translations_on_article_id_and_language", unique: true
+    t.index ["article_id"], name: "index_article_translations_on_article_id"
+  end
+
   create_table "articles", force: :cascade do |t|
     t.text "body", null: false
     t.datetime "created_at", null: false
@@ -120,6 +132,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_202412) do
     t.string "llm_provider", default: "gemini", null: false
     t.text "plan_prompt", null: false
     t.text "seo_review_prompt", null: false
+    t.text "translation_prompt", default: "You are a professional translator. Translate the following article accurately and naturally.", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["user_id"], name: "index_settings_on_user_id", unique: true
@@ -139,6 +152,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_10_202412) do
   add_foreign_key "article_categories", "articles"
   add_foreign_key "article_categories", "categories"
   add_foreign_key "article_reviews", "articles"
+  add_foreign_key "article_translations", "articles"
   add_foreign_key "review_suggestions", "article_reviews"
   add_foreign_key "sessions", "users"
   add_foreign_key "settings", "users"

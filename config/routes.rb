@@ -8,6 +8,9 @@ Rails.application.routes.draw do
       post :review, to: "articles/reviews#create"
       post :generate_plan, to: "articles/plans#create"
       get :export, to: "articles/exports#create"
+      post :translate, to: "articles/translations#create"
+      patch :translate, to: "articles/translations#update"
+      get :export_translation, to: "articles/translations#export"
     end
     collection do
       post :markdown_preview, to: "articles/markdown_previews#show"

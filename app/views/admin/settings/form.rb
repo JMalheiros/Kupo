@@ -111,6 +111,7 @@ class Views::Admin::Settings::Form < Views::Base
       prompt_field("Plan Prompt", "setting[plan_prompt]", @setting.plan_prompt)
       prompt_field("Content Review Prompt", "setting[content_review_prompt]", @setting.content_review_prompt)
       prompt_field("SEO Review Prompt", "setting[seo_review_prompt]", @setting.seo_review_prompt)
+      prompt_field("Translation Prompt", "setting[translation_prompt]", @setting.translation_prompt)
     end
   end
 
