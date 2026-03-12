@@ -17,8 +17,8 @@ class Components::Admin::Reviews < Components::Base
 
       if @article.persisted?
         div(class: "flex justify-center") do
-          form(action: review_article_path(slug: @article.slug), method: "post") do
-            input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
+          Form(action: review_article_path(slug: @article.slug), method: "post") do
+            Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
             Button(type: :submit, disabled: review_in_progress?) do
               Lucide::Sparkles(variant: :filled, class: "h-4 w-4 mr-1.5 inline-block")
               plain review_in_progress? ? "Review in progress..." : "Review Article"
@@ -26,18 +26,18 @@ class Components::Admin::Reviews < Components::Base
           end
         end
       else
-        p(class: "text-sm text-muted-foreground text-center") { "Save the article first to enable AI review." }
+        Text(size: "sm", weight: "muted", class: "text-center") { "Save the article first to enable AI review." }
       end
 
       # Content Review Section
       div do
         Heading(level: 3, class: "mb-3") { "Content Review" }
-        p(class: "text-sm text-muted-foreground mb-3") { "Grammar, clarity, tone, and structure" }
+        Text(size: "sm", weight: "muted", class: "mb-3") { "Grammar, clarity, tone, and structure" }
         div(id: "content-review-results") do
           if @latest_review
             render_section_status("content")
           else
-            p(class: "text-sm text-muted-foreground") { "No review yet." }
+            Text(size: "sm", weight: "muted") { "No review yet." }
           end
         end
       end
@@ -45,12 +45,12 @@ class Components::Admin::Reviews < Components::Base
       # SEO Review Section
       div do
         Heading(level: 3, class: "mb-3") { "SEO & Metadata Review" }
-        p(class: "text-sm text-muted-foreground mb-3") { "Title, SEO, summaries, and tags" }
+        Text(size: "sm", weight: "muted", class: "mb-3") { "Title, SEO, summaries, and tags" }
         div(id: "seo-review-results") do
           if @latest_review
             render_section_status("seo")
           else
-            p(class: "text-sm text-muted-foreground") { "No review yet." }
+            Text(size: "sm", weight: "muted") { "No review yet." }
           end
         end
       end
@@ -69,7 +69,7 @@ class Components::Admin::Reviews < Components::Base
     case status
     when "pending"
       div(class: "flex items-center gap-2") do
-        span(class: "animate-pulse text-sm text-muted-foreground") { "Analyzing..." }
+        Text(size: "sm", weight: "muted", class: "animate-pulse") { "Analyzing..." }
       end
     when "completed"
       suggestions = @latest_review.review_suggestions.where(process: process)
@@ -78,7 +78,10 @@ class Components::Admin::Reviews < Components::Base
         article: @article
       )
     when "failed"
-      p(class: "text-sm text-destructive") { "Review failed. Please try again." }
+      Alert(variant: :destructive) do
+        AlertTitle { "Review failed" }
+        AlertDescription { "Please try again." }
+      end
     end
   end
 end

@@ -52,7 +52,7 @@ class Components::Admin::Articles::ArticleFields < Components::Base
           end
         end
         # Hidden field to allow empty category_ids
-        input(type: "hidden", name: "article[category_ids][]", value: "")
+        Input(type: :hidden, name: "article[category_ids][]", value: "")
       end
     end
 

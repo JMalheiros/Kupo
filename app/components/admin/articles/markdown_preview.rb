@@ -17,9 +17,9 @@ class Components::Admin::Articles::MarkdownPreview < Components::Base
         end
 
         TabsContent(value: "write") do
-          textarea(
+          Textarea(
             name: "article[body]",
-            class: "w-full min-h-[40vh] p-4 pb-2 font-mono text-sm border border-input rounded-lg bg-background text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring",
+            class: "min-h-[40vh] p-4 pb-2 font-mono rounded-lg text-foreground resize-none",
             data: { markdown_preview_target: "input" },
             placeholder: "Write your article in markdown..."
           ) { plain @body }

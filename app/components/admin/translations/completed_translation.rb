@@ -8,10 +8,10 @@ class Components::Admin::Translations::CompletedTranslation < Components::Base
   end
 
   def view_template
-    form(action: translate_article_path(slug: @article.slug), method: "post", class: "space-y-4") do
-      input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-      input(type: "hidden", name: "_method", value: "patch")
-      input(type: "hidden", name: "language", value: @language)
+    Form(action: translate_article_path(slug: @article.slug), method: "post", class: "space-y-4") do
+      Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+      Input(type: :hidden, name: "_method", value: "patch")
+      Input(type: :hidden, name: "language", value: @language)
 
       FormField do
         FormFieldLabel { "Translated Title" }
@@ -22,7 +22,8 @@ class Components::Admin::Translations::CompletedTranslation < Components::Base
         )
       end
 
-      div(class: "col-span-3") do
+      FormField do
+        FormFieldLabel { "Translated Body" }
         div(data: { controller: "markdown-preview" }) do
           Tabs(default: "write") do
             TabsList do
@@ -34,9 +35,9 @@ class Components::Admin::Translations::CompletedTranslation < Components::Base
             end
 
             TabsContent(value: "write") do
-              textarea(
+              Textarea(
                 name: "article_translation[body]",
-                class: "w-full min-h-[40vh] p-4 pb-2 font-mono text-sm border border-input rounded-lg bg-background text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring",
+                class: "min-h-[40vh] p-4 pb-2 font-mono rounded-lg text-foreground resize-none",
                 data: { markdown_preview_target: "input" },
                 placeholder: "Translated content..."
               ) { plain @translation.body }

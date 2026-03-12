@@ -56,6 +56,7 @@ CI steps: setup → rubocop → bundler-audit → importmap audit → brakeman �
 - **Deployment**: Kamal (Docker-based), configured in `config/deploy.yml`.
 - **CI**: GitHub Actions (`.github/workflows/ci.yml`), mirrors `bin/ci` steps.
 - **FileStorage**: Uses ActiveStorage and local disk on development. Uses Amazon S3 on production.
+- **FrontEnd**: Use RubyUI as much as possible.
 
 ## Pre-Commit Checklist
 

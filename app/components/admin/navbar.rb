@@ -19,10 +19,10 @@ class Components::Admin::Navbar < Components::Base
 
           render Components::ThemeToggleButton.new
 
-          form(action: session_path(Current.session), method: "post") do
-            input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-            input(type: "hidden", name: "_method", value: "delete")
-            button(type: "submit", class: "text-sm text-muted-foreground hover:text-foreground cursor-pointer") { "Sign out" }
+          Form(action: session_path(Current.session), method: "post") do
+            Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+            Input(type: :hidden, name: "_method", value: "delete")
+            Button(type: :submit, variant: :ghost, size: :sm, class: "text-muted-foreground") { "Sign out" }
           end
         end
       end

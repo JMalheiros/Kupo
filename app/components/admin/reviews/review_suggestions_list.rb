@@ -17,7 +17,7 @@ class Components::Admin::Reviews::ReviewSuggestionsList < Components::Base
         end
       end
     else
-      p(class: "text-sm text-muted-foreground") { "No suggestions found — your article looks good!" }
+      Text(size: "sm", weight: "muted") { "No suggestions found — your article looks good!" }
     end
   end
 end

@@ -16,8 +16,8 @@ class Views::Admin::Categories::Index < Views::Base
 
           DialogMiddle do
             # New category form
-            form(action: categories_path, method: "post", class: "flex gap-2 mb-6") do
-              input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
+            Form(action: categories_path, method: "post", class: "flex gap-2 mb-6") do
+              Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
               Input(
                 type: :text,
                 name: "category[name]",
@@ -46,9 +46,9 @@ class Views::Admin::Categories::Index < Views::Base
   def render_category_row(category)
     div(id: "category_#{category.id}", class: "flex items-center justify-between p-3 rounded-lg border border-border") do
       span(class: "text-foreground") { plain category.name }
-      form(action: category_path(category), method: "post") do
-        input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-        input(type: "hidden", name: "_method", value: "delete")
+      Form(action: category_path(category), method: "post") do
+        Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+        Input(type: :hidden, name: "_method", value: "delete")
         Button(
           type: :submit,
           variant: :ghost,

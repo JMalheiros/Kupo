@@ -10,9 +10,9 @@ class Components::Admin::Translations::TranslateButton < Components::Base
 
   def view_template
     div(class: "flex justify-center") do
-      form(action: translate_article_path(slug: @article.slug), method: "post") do
-        input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-        input(type: "hidden", name: "language", value: @language)
+      Form(action: translate_article_path(slug: @article.slug), method: "post") do
+        Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+        Input(type: :hidden, name: "language", value: @language)
         Button(type: :submit, disabled: @translation&.status == "pending") do
           Lucide::Sparkles(variant: :filled, class: "h-4 w-4 mr-1.5 inline-block")
           plain button_label

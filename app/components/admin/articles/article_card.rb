@@ -47,9 +47,9 @@ class Components::Admin::Articles::ArticleCard < Components::Base
 
         render Components::Admin::Articles::PublishSheet.new(article: @article) unless %w[published publishing].include?(@article.status)
 
-        form(action: article_path(slug: @article.slug), method: "post") do
-          input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-          input(type: "hidden", name: "_method", value: "delete")
+        Form(action: article_path(slug: @article.slug), method: "post") do
+          Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+          Input(type: :hidden, name: "_method", value: "delete")
           Button(
             type: :submit,
             variant: :ghost,

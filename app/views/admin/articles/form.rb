@@ -87,9 +87,9 @@ class Views::Admin::Articles::Form < Views::Base
 
   def form_with_tag(url:, method:, &block)
     actual_method = method == "patch" ? "post" : method
-    form(action: url, method: actual_method, class: "grid grid-cols-3 space-y-4 gap-3") do
-      input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-      input(type: "hidden", name: "_method", value: method) if method == "patch"
+    Form(action: url, method: actual_method, class: "grid grid-cols-3 space-y-4 gap-3") do
+      Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+      Input(type: :hidden, name: "_method", value: method) if method == "patch"
       yield
     end
   end

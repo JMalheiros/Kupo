@@ -19,9 +19,9 @@ class Components::Admin::Articles::PublishSheet < Components::Base
 
         SheetMiddle do
           # Publish Now
-          form(action: publish_article_path(slug: @article.slug), method: "post", class: "mb-4") do
-            input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-            input(type: "hidden", name: "publish_action", value: "now")
+          Form(action: publish_article_path(slug: @article.slug), method: "post", class: "mb-4") do
+            Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+            Input(type: :hidden, name: "publish_action", value: "now")
             Button(type: :submit, class: "w-full") { "Publish Now" }
           end
 
@@ -30,14 +30,14 @@ class Components::Admin::Articles::PublishSheet < Components::Base
               div(class: "w-full border-t border-border")
             end
             div(class: "relative flex justify-center text-xs uppercase") do
-              span(class: "bg-background px-2 text-muted-foreground") { "Or schedule" }
+              Text(as: "span", size: "xs", weight: "muted", class: "bg-background px-2") { "Or schedule" }
             end
           end
 
           # Schedule
-          form(action: publish_article_path(slug: @article.slug), method: "post") do
-            input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-            input(type: "hidden", name: "publish_action", value: "schedule")
+          Form(action: publish_article_path(slug: @article.slug), method: "post") do
+            Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+            Input(type: :hidden, name: "publish_action", value: "schedule")
 
             div(class: "space-y-2") do
               Input(

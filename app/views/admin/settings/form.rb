@@ -21,9 +21,9 @@ class Views::Admin::Settings::Form < Views::Base
                 TabsTrigger(value: "prompts") { "Prompts" }
               end
 
-              form(action: settings_path, method: "post", class: "space-y-6") do
-                input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-                input(type: "hidden", name: "_method", value: "patch")
+              Form(action: settings_path, method: "post", class: "space-y-6") do
+                Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+                Input(type: :hidden, name: "_method", value: "patch")
 
                 TabsContent(class: "rounded-lg border border-border bg-muted/50 p-4", value: "llm") do
                   llm_section
@@ -53,13 +53,16 @@ class Views::Admin::Settings::Form < Views::Base
     div(class: "grid grid-cols-2 gap-4 mb-6") do
       FormField do
         FormFieldLabel { "Provider" }
-        select(
-          name: "setting[llm_provider]",
-          class: "flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-        ) do
-          ApiKey::PROVIDERS.each do |provider|
-            option(value: provider, selected: @setting.llm_provider == provider) { provider.capitalize }
+        Select(name: "setting[llm_provider]", default: @setting.llm_provider) do
+          SelectTrigger do
+            SelectValue(placeholder: "Select provider")
           end
+          SelectContent do
+            ApiKey::PROVIDERS.each do |provider|
+              SelectItem(value: provider) { provider.capitalize }
+            end
+          end
+          SelectInput(name: "setting[llm_provider]")
         end
       end
 
@@ -86,8 +89,8 @@ class Views::Admin::Settings::Form < Views::Base
             div(class: "flex h-9 items-center rounded-md border border-input bg-muted px-3 text-sm text-muted-foreground") do
               plain api_key.provider.capitalize
             end
-            input(type: "hidden", name: "user[api_keys_attributes][#{index}][provider]", value: api_key.provider)
-            input(type: "hidden", name: "user[api_keys_attributes][#{index}][id]", value: api_key.id) if api_key.persisted?
+            Input(type: :hidden, name: "user[api_keys_attributes][#{index}][provider]", value: api_key.provider)
+            Input(type: :hidden, name: "user[api_keys_attributes][#{index}][id]", value: api_key.id) if api_key.persisted?
           end
 
           FormField(class: "col-span-2") do
@@ -118,9 +121,9 @@ class Views::Admin::Settings::Form < Views::Base
   def prompt_field(label, name, value)
     FormField do
       FormFieldLabel { label }
-      textarea(
+      Textarea(
         name: name,
-        class: "w-full min-h-[20vh] p-3 font-mono text-sm border border-input rounded-lg bg-background text-foreground resize-none focus:outline-none focus:ring-1 focus:ring-ring",
+        class: "min-h-[20vh] p-3 font-mono rounded-lg text-foreground resize-none",
         placeholder: "Enter prompt..."
       ) { plain value }
     end

@@ -17,7 +17,7 @@ class Components::Admin::Reviews::ReviewSuggestionCard < Components::Base
         end
       end
 
-      p(class: "text-sm text-muted-foreground") { plain @suggestion.explanation }
+      Text(size: "sm", weight: "muted") { plain @suggestion.explanation }
 
       if @suggestion.original_text.present?
         div(class: "space-y-1") do
@@ -39,23 +39,23 @@ class Components::Admin::Reviews::ReviewSuggestionCard < Components::Base
 
       if @suggestion.status == "pending" && @suggestion.process == "content"
         div(class: "flex gap-2 pt-1") do
-          form(
+          Form(
             action: article_review_suggestion_path(slug: @article.slug, id: @suggestion.id),
             method: "post"
           ) do
-            input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-            input(type: "hidden", name: "_method", value: "patch")
-            input(type: "hidden", name: "status", value: "accepted")
+            Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+            Input(type: :hidden, name: "_method", value: "patch")
+            Input(type: :hidden, name: "status", value: "accepted")
             Button(type: :submit, variant: :outline, size: :sm) { "Accept" }
           end
 
-          form(
+          Form(
             action: article_review_suggestion_path(slug: @article.slug, id: @suggestion.id),
             method: "post"
           ) do
-            input(type: "hidden", name: "authenticity_token", value: form_authenticity_token)
-            input(type: "hidden", name: "_method", value: "patch")
-            input(type: "hidden", name: "status", value: "rejected")
+            Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+            Input(type: :hidden, name: "_method", value: "patch")
+            Input(type: :hidden, name: "status", value: "rejected")
             Button(type: :submit, variant: :ghost, size: :sm, class: "text-muted-foreground") { "Reject" }
           end
         end
