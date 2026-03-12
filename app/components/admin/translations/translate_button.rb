@@ -9,27 +9,23 @@ class Components::Admin::Translations::TranslateButton < Components::Base
   end
 
   def view_template
-    div(class: "flex justify-center") do
-      Form(action: translate_article_path(slug: @article.slug), method: "post") do
-        Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
-        Input(type: :hidden, name: "language", value: @language)
-        Button(type: :submit, disabled: @translation&.status == "pending") do
-          Lucide::Sparkles(variant: :filled, class: "h-4 w-4 mr-1.5 inline-block")
-          plain button_label
+    div(class: "flex items-center justify-center gap-3") do
+      if @translation&.status == "pending"
+        p(class: "text-sm text-muted-foreground animate-pulse") { "Translating to #{@language_name}..." }
+        Button(disabled: true) do
+          Lucide::LoaderCircle(class: "h-4 w-4 mr-1.5 inline-block animate-spin")
+          plain "Translate to #{@language_name}"
+        end
+      else
+        Form(action: translate_article_path(slug: @article.slug), method: "post") do
+          Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+          Input(type: :hidden, name: "language", value: @language)
+          Button(type: :submit) do
+            Lucide::Sparkles(variant: :filled, class: "h-4 w-4 mr-1.5 inline-block")
+            plain @translation&.status == "completed" ? "Re-translate" : "Translate to #{@language_name}"
+          end
         end
       end
-    end
-  end
-
-  private
-
-  def button_label
-    if @translation&.status == "pending"
-      "Translating..."
-    elsif @translation&.status == "completed"
-      "Re-translate"
-    else
-      "Translate to #{@language_name}"
     end
   end
 end

@@ -12,7 +12,7 @@ class Components::Admin::Articles::Filters < Components::Base
     # Category filter
     nav(class: "flex flex-wrap gap-2 mb-4") do
       a(
-        href: filter_path,
+        href: filter_path(category: nil),
         class: category_filter_class(nil),
         data: { turbo_frame: "articles" }
       ) { "All" }

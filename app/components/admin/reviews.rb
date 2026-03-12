@@ -7,26 +7,29 @@ class Components::Admin::Reviews < Components::Base
   end
 
   def view_template
-    div(class: "space-y-6 py-4") do
-      if @article.persisted?
-        tag(:"turbo-cable-stream-source",
-          channel: "Turbo::StreamsChannel",
-          "signed-stream-name": Turbo::StreamsChannel.signed_stream_name(Current.user)
-        )
-      end
-
-      if @article.persisted?
-        div(class: "flex justify-center") do
-          Form(action: review_article_path(slug: @article.slug), method: "post") do
-            Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
-            Button(type: :submit, disabled: review_in_progress?) do
-              Lucide::Sparkles(variant: :filled, class: "h-4 w-4 mr-1.5 inline-block")
-              plain review_in_progress? ? "Review in progress..." : "Review Article"
+    div(id: "article-reviews", class: "space-y-6 py-4") do
+      div(id: "review-button") do
+        if @article.persisted?
+          div(class: "flex items-center justify-center gap-3") do
+            if review_in_progress?
+              p(class: "text-sm text-muted-foreground animate-pulse") { "Reviewing article..." }
+              Button(disabled: true) do
+                Lucide::LoaderCircle(class: "h-4 w-4 mr-1.5 inline-block animate-spin")
+                plain "Review Article"
+              end
+            else
+              Form(action: review_article_path(slug: @article.slug), method: "post") do
+                Input(type: :hidden, name: "authenticity_token", value: form_authenticity_token)
+                Button(type: :submit) do
+                  Lucide::Sparkles(variant: :filled, class: "h-4 w-4 mr-1.5 inline-block")
+                  plain "Review Article"
+                end
+              end
             end
           end
+        else
+          Text(size: "sm", weight: "muted", class: "text-center") { "Save the article first to enable AI review." }
         end
-      else
-        Text(size: "sm", weight: "muted", class: "text-center") { "Save the article first to enable AI review." }
       end
 
       # Content Review Section

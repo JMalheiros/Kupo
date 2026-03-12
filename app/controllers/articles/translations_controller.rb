@@ -4,14 +4,18 @@ module Articles
   class TranslationsController < ApplicationController
     def create
       @article = Article.find_by!(slug: params[:slug])
-      @categories = Category.all
       language = params[:language]
 
       translation = @article.article_translations.find_or_initialize_by(language: language)
       translation.update!(status: "pending", title: nil, body: nil)
 
       TranslateArticleJob.perform_later(@article, Current.user, language)
-      render Views::Admin::Articles::Form.new(article: @article, categories: @categories)
+
+      @article.reload
+      render turbo_stream: turbo_stream.replace(
+        "article-translation-editor",
+        Components::Admin::Translations.new(article: @article)
+      )
     end
 
     def update

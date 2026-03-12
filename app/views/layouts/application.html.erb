@@ -32,6 +32,10 @@
     </header>
 
     <main>
+      <% if authenticated? %>
+        <%= turbo_stream_from Current.user %>
+      <% end %>
+      <%= render Components::Admin::Toast.new(notice: flash[:notice], alert: flash[:alert]) %>
       <%= yield %>
     </main>
   </body>

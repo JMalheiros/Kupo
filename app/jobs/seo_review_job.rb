@@ -16,10 +16,12 @@ class SeoReviewJob < ApplicationJob
 
     review.update!(seo_status: "completed")
     broadcast_results(review, user, "seo")
+    broadcast_button(review, user) unless review.reload.content_status == "pending"
   rescue => e
     Rails.logger.error("SeoReviewJob failed: #{e.class} - #{e.message}")
     review.update!(seo_status: "failed")
     broadcast_error(user, "seo")
+    broadcast_button(review, user) unless review.reload.content_status == "pending"
   end
 
   private
@@ -47,6 +49,19 @@ class SeoReviewJob < ApplicationJob
       user,
       target: "#{process}-review-results",
       html: "<p class='text-sm text-destructive'>Review failed. Please try again.</p>"
+    )
+  end
+
+  def broadcast_button(review, user)
+    html = ApplicationController.render(
+      Components::Admin::Reviews.new(article: review.article),
+      layout: false
+    )
+
+    Turbo::StreamsChannel.broadcast_replace_to(
+      user,
+      target: "article-reviews",
+      html: html
     )
   end
 end

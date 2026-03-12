@@ -11,12 +11,14 @@ module Articles
         review = @article.create_article_review!
       end
 
-      @categories = Category.all
-
       ContentReviewJob.perform_later(review, Current.user)
       SeoReviewJob.perform_later(review, Current.user)
 
-      render Views::Admin::Articles::Form.new(article: @article, categories: @categories)
+      @article.reload
+      render turbo_stream: turbo_stream.replace(
+        "article-reviews",
+        Components::Admin::Reviews.new(article: @article)
+      )
     end
 
     def update_suggestion

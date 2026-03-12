@@ -28,7 +28,7 @@ class ArticlesController < ApplicationController
     @categories = Category.all
 
     if @article.save
-      render Views::Admin::Articles::Form.new(article: @article, categories: @categories)
+      redirect_to root_path, notice: "Article was successfully created."
     else
       render Views::Admin::Articles::Form.new(article: @article, categories: @categories), status: :unprocessable_entity
     end
@@ -43,8 +43,10 @@ class ArticlesController < ApplicationController
     @categories = Category.all
 
     if @article.update(article_params)
+      broadcast_toast(notice: "Article was successfully updated.")
       render Views::Admin::Articles::Form.new(article: @article, categories: @categories)
     else
+      broadcast_toast(alert: "Failed to update article.")
       render Views::Admin::Articles::Form.new(article: @article, categories: @categories), status: :unprocessable_entity
     end
   end

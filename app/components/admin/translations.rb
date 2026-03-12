@@ -10,13 +10,6 @@ class Components::Admin::Translations < Components::Base
 
   def view_template
     div(id: "article-translation-editor") do
-      if @article.persisted?
-        tag(:"turbo-cable-stream-source",
-          channel: "Turbo::StreamsChannel",
-          "signed-stream-name": Turbo::StreamsChannel.signed_stream_name(Current.user)
-        )
-      end
-
       div(class: "space-y-6 py-4") do
         Tabs(default: ArticleTranslation::LANGUAGES.keys.first) do
           TabsList do
