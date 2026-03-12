@@ -21,6 +21,24 @@ bin/rubocop              # Lint with RuboCop
 bin/ci                   # Run full CI pipeline (lint, audit, security, tests)
 ```
 
+## Encryption
+
+Active Record encryption is pre-configured with development defaults, so **no extra setup is needed** for local development. The initializer at `config/initializers/active_record_encryption.rb` falls back to hardcoded keys when the environment variables are not set.
+
+In production, you must set the following environment variables with real keys:
+
+```sh
+ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY=...
+ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY=...
+ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT=...
+```
+
+Generate production keys with:
+
+```sh
+bin/rails db:encryption:init
+```
+
 ## Hugo Integration
 
 KUPO publishes articles to a Hugo site by pushing markdown page bundles to a git repository. When you publish an article, a background job clones the Hugo repo, writes the post to `content/posts/<slug>/index.md` with YAML front matter, copies attached images, and pushes the commit.
