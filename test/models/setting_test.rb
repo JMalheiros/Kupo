@@ -4,7 +4,7 @@ class SettingTest < ActiveSupport::TestCase
   should belong_to(:user)
 
   should validate_presence_of(:llm_provider)
-  should validate_inclusion_of(:llm_provider).in_array(%w[gemini claude openai])
+  should validate_inclusion_of(:llm_provider).in_array(%w[gemini claude openai ollama])
   should validate_presence_of(:llm_model)
 
   context ".for" do
@@ -37,7 +37,7 @@ class SettingTest < ActiveSupport::TestCase
       Setting.for_edit(user)
 
       providers = user.api_keys.map(&:provider).sort
-      assert_equal %w[claude gemini openai], providers
+      assert_equal %w[claude gemini ollama openai], providers
       assert user.api_keys.all?(&:new_record?)
     end
 
@@ -48,7 +48,7 @@ class SettingTest < ActiveSupport::TestCase
       Setting.for_edit(user)
 
       built_providers = user.api_keys.select(&:new_record?).map(&:provider).sort
-      assert_equal %w[claude openai], built_providers
+      assert_equal %w[claude ollama openai], built_providers
     end
   end
 end

@@ -19,12 +19,12 @@ class Setting < ApplicationRecord
 
   belongs_to :user
 
-  validates :llm_provider, presence: true, inclusion: { in: %w[gemini claude openai] }
+  validates :llm_provider, presence: true, inclusion: { in: %w[gemini claude openai ollama] }
   validates :llm_model, presence: true
 
   def self.for(user)
     user.setting || user.create_setting!(
-      plan_prompt: DEFAULT_PLAN_PROMPT ,
+      plan_prompt: DEFAULT_PLAN_PROMPT,
       content_review_prompt: DEFAULT_CONTENT_REVIEW_PROMPT,
       seo_review_prompt: DEFAULT_SEO_REVIEW_PROMPT,
       translation_prompt: DEFAULT_TRANSLATION_PROMPT,

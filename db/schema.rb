@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_12_134029) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_12_150000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -40,10 +40,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_134029) do
   end
 
   create_table "api_keys", force: :cascade do |t|
-    t.string "api_key", null: false
+    t.string "api_key"
     t.datetime "created_at", null: false
     t.string "provider", null: false
     t.datetime "updated_at", null: false
+    t.string "url"
     t.integer "user_id", null: false
     t.index ["user_id", "provider"], name: "index_api_keys_on_user_id_and_provider", unique: true
     t.index ["user_id"], name: "index_api_keys_on_user_id"

@@ -57,6 +57,20 @@ class LangchainClientTest < ActiveSupport::TestCase
     end
   end
 
+  context ".ollama" do
+    should "build an Ollama client with default model and url" do
+      ENV.stubs(:fetch).with("OLLAMA_URL", "http://localhost:11434").returns("http://localhost:11434")
+      Langchain::LLM::Ollama.expects(:new).with(
+        url: "http://localhost:11434",
+        default_options: { chat_model: "llama3.2" }
+      ).returns(:llm_instance)
+
+      result = LangchainClient.ollama
+
+      assert_equal :llm_instance, result
+    end
+  end
+
   context ".for_user" do
     should "build client from user settings" do
       user = create(:user)
@@ -82,6 +96,21 @@ class LangchainClientTest < ActiveSupport::TestCase
       Langchain::LLM::GoogleGemini.expects(:new).with(
         api_key: "user-key",
         default_options: { chat_model: "gemini-2.5-flash" }
+      ).returns(:llm_instance)
+
+      result = LangchainClient.for_user(user.reload)
+
+      assert_equal :llm_instance, result
+    end
+
+    should "build ollama client using stored url" do
+      user = create(:user)
+      Setting.for(user).update!(llm_provider: "ollama", llm_model: "llama3.2")
+      create(:api_key, user: user, provider: "ollama", api_key: nil, url: "http://myserver:11434")
+
+      Langchain::LLM::Ollama.expects(:new).with(
+        url: "http://myserver:11434",
+        default_options: { chat_model: "llama3.2" }
       ).returns(:llm_instance)
 
       result = LangchainClient.for_user(user.reload)

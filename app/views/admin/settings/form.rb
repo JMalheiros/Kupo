@@ -94,13 +94,23 @@ class Views::Admin::Settings::Form < Views::Base
           end
 
           FormField(class: "col-span-2") do
-            FormFieldLabel { "API Key" } if index == 0
-            Input(
-              type: :password,
-              name: "user[api_keys_attributes][#{index}][api_key]",
-              value: api_key.persisted? ? api_key.api_key : "",
-              placeholder: "Enter your #{api_key.provider.capitalize} API key"
-            )
+            if api_key.ollama?
+              FormFieldLabel { "URL" } if index == 0
+              Input(
+                type: :text,
+                name: "user[api_keys_attributes][#{index}][url]",
+                value: api_key.persisted? ? api_key.url : "",
+                placeholder: "http://localhost:11434"
+              )
+            else
+              FormFieldLabel { "API Key" } if index == 0
+              Input(
+                type: :password,
+                name: "user[api_keys_attributes][#{index}][api_key]",
+                value: api_key.persisted? ? api_key.api_key : "",
+                placeholder: "Enter your #{api_key.provider.capitalize} API key"
+              )
+            end
           end
         end
       end

@@ -5,7 +5,31 @@ class ApiKeyTest < ActiveSupport::TestCase
 
   should validate_presence_of(:provider)
   should validate_inclusion_of(:provider).in_array(ApiKey::PROVIDERS)
-  should validate_presence_of(:api_key)
+  context "api_key validation" do
+    should "require api_key for non-ollama providers" do
+      api_key = build(:api_key, provider: "gemini", api_key: nil)
+      assert_not api_key.valid?
+      assert_includes api_key.errors[:api_key], "can't be blank"
+    end
+
+    should "not require api_key for ollama" do
+      api_key = build(:api_key, provider: "ollama", api_key: nil, url: "http://localhost:11434")
+      assert api_key.valid?
+    end
+  end
+
+  context "url validation" do
+    should "require url for ollama" do
+      api_key = build(:api_key, provider: "ollama", api_key: nil, url: nil)
+      assert_not api_key.valid?
+      assert_includes api_key.errors[:url], "can't be blank"
+    end
+
+    should "not require url for non-ollama providers" do
+      api_key = build(:api_key, provider: "gemini", url: nil)
+      assert api_key.valid?
+    end
+  end
 
   should "enforce one key per provider per user" do
     user = create(:user)

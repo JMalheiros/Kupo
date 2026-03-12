@@ -34,7 +34,7 @@ class SettingsController < ApplicationController
 
   def api_keys_params
     if params[:user].present?
-      params.require(:user).permit(api_keys_attributes: [ :id, :provider, :api_key ])
+      params.require(:user).permit(api_keys_attributes: [ :id, :provider, :api_key, :url ])
     else
       {}
     end

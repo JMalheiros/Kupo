@@ -16,6 +16,11 @@ class LangchainClient
       class: Langchain::LLM::OpenAI,
       env_key: "OPENAI_API_KEY",
       default_model: "gpt-4o-mini"
+    },
+    "ollama" => {
+      class: Langchain::LLM::Ollama,
+      env_key: "OLLAMA_URL",
+      default_model: "llama3.2"
     }
   }.freeze
 
@@ -37,17 +42,23 @@ class LangchainClient
       build("openai", model: model)
     end
 
+    def ollama(model: nil)
+      build("ollama", model: model)
+    end
+
     private
 
     def build(provider, model: nil, user: nil)
       config = PROVIDERS.fetch(provider)
       model ||= config[:default_model]
-      api_key = resolve_api_key(provider, config[:env_key], user)
 
-      config[:class].new(
-        api_key: api_key,
-        default_options: { chat_model: model }
-      )
+      if provider == "ollama"
+        url = resolve_ollama_url(config[:env_key], user)
+        config[:class].new(url: url, default_options: { chat_model: model })
+      else
+        api_key = resolve_api_key(provider, config[:env_key], user)
+        config[:class].new(api_key: api_key, default_options: { chat_model: model })
+      end
     end
 
     def resolve_api_key(provider, env_key, user)
@@ -56,6 +67,10 @@ class LangchainClient
       else
         ENV.fetch(env_key)
       end
+    end
+
+    def resolve_ollama_url(env_key, user)
+      user&.api_keys&.find_by(provider: "ollama")&.url || ENV.fetch(env_key, "http://localhost:11434")
     end
   end
 end
