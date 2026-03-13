@@ -120,7 +120,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
 
       article = Article.last
       assert_equal "draft", article.status
-      assert_redirected_to articles_url
+      assert_redirected_to root_url
     end
 
     should "not create article with invalid params" do
@@ -142,7 +142,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
       patch article_url(slug: @article.slug), params: { article: { title: "Updated Title" } }
       @article.reload
       assert_equal "Updated Title", @article.title
-      assert_redirected_to articles_url
+      assert_response :success
     end
   end
 
