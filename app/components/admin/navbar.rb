@@ -3,7 +3,7 @@
 class Components::Admin::Navbar < Components::Base
   def view_template
     div(class: "max-w-4xl mx-auto px-4 py-4 flex items-center justify-between") do
-      img(src: "/icon.png", alt: "Kupo Logo", class: "w-8 h-8 mr-2 bg-transparent") 
+      img(src: "/icon.png", alt: "Kupo Logo", class: "w-8 h-8 mr-2 bg-transparent")
       a(href: "/", class: "text-xl font-bold text-foreground hover:text-primary transition-colors") { "KUPO" }
 
       if authenticated?

@@ -27,6 +27,7 @@ class HugoPostFormatter
       title: "#{@article.title}"
       date: #{@article.published_at.iso8601}
       categories: [#{categories}]
+      author: "#{ENV['HUGO_AUTHOR_NAME']}"
       draft: false
       ---
 

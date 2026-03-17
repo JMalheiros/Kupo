@@ -14,4 +14,3 @@ pin "@floating-ui/utils/dom", to: "@floating-ui--utils--dom.js" # @0.2.11
 pin "@rails/actioncable", to: "@rails--actioncable.js" # @8.1.200
 pin "embla-carousel" # @8.6.0
 pin "motion", to: "https://cdn.jsdelivr.net/npm/motion@11.11.17/+esm"
-
