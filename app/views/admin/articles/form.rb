@@ -18,7 +18,7 @@ class Views::Admin::Articles::Form < Views::Base
             if @article.persisted?
               tabbed_content
             else
-              article_form
+              new_article_tabs
             end
           end
         end
@@ -53,21 +53,24 @@ class Views::Admin::Articles::Form < Views::Base
     end
   end
 
-  def article_form
-    url = @article.new_record? ? articles_path : article_path(slug: @article.slug)
-    method = @article.new_record? ? "post" : "patch"
+  def new_article_tabs
+    div do
+      Tabs(default: "edit") do
+        TabsList do
+          TabsTrigger(value: "plan") { "Plan" }
+          TabsTrigger(value: "edit") { "Edit" }
+        end
 
-    form_with_tag(url: url, method: method) do
-      render Components::Admin::Articles::ArticleFields.new(article: @article, categories: @categories)
-      render Components::Admin::Articles::SubmitButton.new(article: @article)
-      render Components::Admin::Articles::MarkdownEditor.new(article: @article)
+        article_form_with_plan
+      end
     end
   end
 
   def article_form_with_plan
-    url = article_path(slug: @article.slug)
+    url = @article.new_record? ? articles_path : article_path(slug: @article.slug)
+    method = @article.new_record? ? "post" : "patch"
 
-    form_with_tag(url: url, method: "patch") do
+    form_with_tag(url: url, method: method) do
       TabsContent(class: "col-span-3 rounded-lg border border-border bg-muted/50 p-4 mb-0", value: "edit") do
         Accordion do
           render Components::Admin::Articles::ArticleFieldsAccordionItem.new(article: @article, categories: @categories)
@@ -75,12 +78,12 @@ class Views::Admin::Articles::Form < Views::Base
             render Components::Admin::Articles::PlanPreviewAccordionItem.new(article: @article)
           end
         end
-        render Components::Admin::Articles::MarkdownEditor.new(article: @article)
+        render Components::Admin::Articles::MarkdownEditor.new(article: @article, required: !@article.new_record?)
       end
 
       TabsContent(class: "col-span-3 rounded-lg border border-border bg-muted/50 p-4", value: "plan") do
         render Components::Admin::Articles::ArticlePlan.new(article: @article)
-        render Components::Admin::Articles::SubmitButton.new(label: "Save Plan", class: "mt-4")
+        render Components::Admin::Articles::SubmitButton.new(article: @article, label: "Save Plan", class: "mt-4")
       end
     end
   end
