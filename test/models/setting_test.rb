@@ -16,7 +16,6 @@ class SettingTest < ActiveSupport::TestCase
       assert setting.persisted?
       assert_equal "gemini", setting.llm_provider
       assert_equal "gemini-2.5-flash", setting.llm_model
-      assert_includes setting.plan_prompt, "content strategist"
       assert_includes setting.content_review_prompt, "expert editor"
       assert_includes setting.seo_review_prompt, "SEO"
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_12_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_06_133514) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -131,7 +131,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_150000) do
     t.datetime "created_at", null: false
     t.string "llm_model", default: "gemini-3-flash", null: false
     t.string "llm_provider", default: "gemini", null: false
-    t.text "plan_prompt", null: false
     t.text "seo_review_prompt", null: false
     t.text "translation_prompt", default: "You are a professional translator. Translate the following article accurately and naturally.", null: false
     t.datetime "updated_at", null: false

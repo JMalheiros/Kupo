@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class Setting < ApplicationRecord
-  DEFAULT_PLAN_PROMPT = <<~PROMPT.freeze
-    You are an expert content strategist and article planner. Based on the article title, current content, and any existing plan, generate a structured article plan in markdown.
-  PROMPT
-
   DEFAULT_CONTENT_REVIEW_PROMPT = <<~PROMPT.freeze
     You are an expert editor. Review the following article and provide suggestions for improvements.
   PROMPT
@@ -24,7 +20,6 @@ class Setting < ApplicationRecord
 
   def self.for(user)
     user.setting || user.create_setting!(
-      plan_prompt: DEFAULT_PLAN_PROMPT,
       content_review_prompt: DEFAULT_CONTENT_REVIEW_PROMPT,
       seo_review_prompt: DEFAULT_SEO_REVIEW_PROMPT,
       translation_prompt: DEFAULT_TRANSLATION_PROMPT,
