@@ -6,7 +6,6 @@ class Article < ApplicationRecord
   has_many :article_translations, dependent: :destroy
 
   validates :title, presence: true
-  validates :body, presence: true
   validates :slug, presence: true, uniqueness: true
   validates :status, presence: true, inclusion: { in: %w[draft scheduled publishing published] }
 

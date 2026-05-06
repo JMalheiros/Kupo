@@ -29,7 +29,7 @@ class SettingsController < ApplicationController
   end
 
   def setting_params
-    params.require(:setting).permit(:llm_provider, :llm_model, :plan_prompt, :content_review_prompt, :seo_review_prompt, :translation_prompt)
+    params.require(:setting).permit(:llm_provider, :llm_model, :content_review_prompt, :seo_review_prompt, :translation_prompt)
   end
 
   def api_keys_params

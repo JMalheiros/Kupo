@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Components::Admin::Articles::MarkdownPreview < Components::Base
-  def initialize(body: "")
+  def initialize(body: "", required: false)
     @body = body
+    @required = required
   end
 
   def view_template
@@ -21,7 +22,8 @@ class Components::Admin::Articles::MarkdownPreview < Components::Base
             name: "article[body]",
             class: "min-h-[40vh] p-4 pb-2 font-mono rounded-lg text-foreground resize-none",
             data: { markdown_preview_target: "input" },
-            placeholder: "Write your article in markdown..."
+            placeholder: "Write your article in markdown...",
+            required: @required
           ) { plain @body }
         end
 

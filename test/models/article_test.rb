@@ -5,9 +5,13 @@ class ArticleTest < ActiveSupport::TestCase
 
   context "validations" do
     should validate_presence_of(:title)
-    should validate_presence_of(:body)
     should validate_uniqueness_of(:slug)
     should validate_inclusion_of(:status).in_array(%w[draft scheduled publishing published])
+
+    should "allow blank body" do
+      article = build(:article, body: nil)
+      assert article.valid?, article.errors.full_messages.to_sentence
+    end
   end
 
   context "slug generation" do

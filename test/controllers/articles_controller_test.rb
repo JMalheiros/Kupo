@@ -123,9 +123,33 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
       assert_redirected_to root_url
     end
 
-    should "not create article with invalid params" do
+    should "create a draft article with only a title" do
+      assert_difference("Article.count", 1) do
+        post articles_url, params: { article: { title: "Title Only" } }
+      end
+
+      article = Article.last
+      assert_equal "draft", article.status
+      assert_nil article.body.presence
+      assert_nil article.plan.presence
+      assert_redirected_to root_url
+    end
+
+    should "create an article with title and plan but no body" do
+      assert_difference("Article.count", 1) do
+        post articles_url, params: { article: { title: "Outline Only", plan: "# Outline\n\n- Point 1" } }
+      end
+
+      article = Article.last
+      assert_equal "Outline Only", article.title
+      assert_equal "# Outline\n\n- Point 1", article.plan
+      assert_nil article.body.presence
+      assert_redirected_to root_url
+    end
+
+    should "not create article without a title" do
       assert_no_difference("Article.count") do
-        post articles_url, params: { article: { title: "", body: "" } }
+        post articles_url, params: { article: { title: "", body: "Some body" } }
       end
       assert_response :unprocessable_entity
     end

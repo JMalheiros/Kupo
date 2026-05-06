@@ -6,7 +6,6 @@ Rails.application.routes.draw do
     member do
       post :publish, to: "articles/publishes#create"
       post :review, to: "articles/reviews#create"
-      post :generate_plan, to: "articles/plans#create"
       get :export, to: "articles/exports#create"
       post :translate, to: "articles/translations#create"
       patch :translate, to: "articles/translations#update"
