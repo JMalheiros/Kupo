@@ -1,34 +1,12 @@
 # frozen_string_literal: true
 
 class Components::Admin::Articles::ArticlePlan < Components::Base
-  def initialize(article:, generating: false)
+  def initialize(article:)
     @article = article
-    @generating = generating
   end
 
   def view_template
     div(id: "article-plan-editor") do
-      if @article.persisted?
-        div(class: "flex items-center justify-end mb-4 gap-3") do
-          if @generating
-            p(class: "text-sm text-muted-foreground animate-pulse") { "Generating plan..." }
-            Button(variant: :outline, disabled: true) do
-              Lucide::LoaderCircle(class: "h-4 w-4 mr-1.5 inline-block animate-spin")
-              plain "Generate Plan"
-            end
-          else
-            Link(
-              href: generate_plan_article_path(slug: @article.slug),
-              variant: :outline,
-              data: { turbo_method: :post }
-            ) do
-              Lucide::Sparkles(variant: :filled, class: "h-4 w-4 mr-1.5 inline-block")
-              plain "Generate Plan"
-            end
-          end
-        end
-      end
-
       div(data: { controller: "markdown-preview" }) do
         Tabs(default: "write") do
           TabsList do
